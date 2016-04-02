@@ -123,29 +123,29 @@ public class hadoop_Training4_CATCH
 	///*
 	 String url = "jdbc:mysql://localhost:3306/";
 	 String driver = "com.mysql.jdbc.Driver";
-	 String db_name ="logging_level3";
+	 String db_name ="logging4_elp";
 	 String userName = "root"; 
 	 String password = "1234";
 	   
 	//@Note: create this file using create_file_listing.py
-	 String listing_file_path = "F:\\Research\\Logging3\\result\\hd_java_files.txt";
-	 String non_logged_file_path = "F:\\Research\\Logging3\\result\\hd_non_logged_catch.txt";
-	 String logged_file_path = "F:\\Research\\Logging3\\result\\hd_logged_catch.txt";
-	 String table = "hd_catch_training3";
+	 String listing_file_path = "F:\\Research\\L4ELP\\result\\hd_java_files.txt";
+	 String non_logged_file_path = "F:\\Research\\L4ELP\\result\\hd_non_logged_catch.txt";
+	 String logged_file_path = "F:\\Research\\L4ELP\\result\\hd_logged_catch.txt";
+	 String table = "hd_catch_training4";
 	//*/
     
 	/*
 	 String url = "jdbc:mysql://localhost:3307/";
 	 String driver = "com.mysql.jdbc.Driver";
-	 String db_name ="logging_level3";
+	 String db_name ="logging4_elp";
 	 String userName = "sangeetal"; 
 	 String password = "sangeetal";
 	
 	//@Note: create this file using create_file_listing.py
-	 String listing_file_path = "E:\\Sangeeta\\Research\\Logging3\\result\\hd_java_files.txt";  
-	 String non_logged_file_path = "E:\\Sangeeta\\Research\\Logging3\\result\\hd_non_logged.txt";
-	 String logged_file_path = "E:\\Sangeeta\\Research\\Logging3\\result\\hd_logged.txt";
-	  String table = "hd_catch_training3";
+	 String listing_file_path = "E:\\Sangeeta\\Research\\L4ELP\\result\\hd_java_files.txt";  
+	 String non_logged_file_path = "E:\\Sangeeta\\Research\\L4ELP\\result\\hd_non_logged.txt";
+	 String logged_file_path = "E:\\Sangeeta\\Research\\L4ELP\\result\\hd_logged.txt";
+	  String table = "hd_catch_training4";
    //*/
 	 
 	 Connection conn=null;	

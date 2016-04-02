@@ -124,29 +124,29 @@ public class cloudstack_Training4_CATCH
 	///*
 	 String url = "jdbc:mysql://localhost:3306/";
 	 String driver = "com.mysql.jdbc.Driver";
-	 String db_name ="logging_level3";
+	 String db_name ="logging4_elp";
 	 String userName = "root"; 
 	 String password = "1234";
 	   
 	//@Note: create this file using create_file_listing.py
-	 String listing_file_path = "F:\\Research\\Logging3\\result\\cloudstack-4.3.0_java_files.txt";
-	 String non_logged_file_path = "F:\\Research\\Logging3\\result\\cloudstack_non_log_catch.txt";
-	 String logged_file_path = "F:\\Research\\Logging3\\result\\cloudstack_log_catch.txt";
-	 String table = "cloudstack_catch_training3";
+	 String listing_file_path = "F:\\Research\\L4ELP\\result\\cloudstack-4.3.0_java_files.txt";
+	 String non_logged_file_path = "F:\\Research\\L4ELP\\result\\cloudstack_non_log_catch.txt";
+	 String logged_file_path = "F:\\Research\\L4ELP\\result\\cloudstack_log_catch.txt";
+	 String table = "cloudstack_catch_training4";
 	//*/
     
 	/*
 	 String url = "jdbc:mysql://localhost:3307/";
 	 String driver = "com.mysql.jdbc.Driver";
-	 String db_name ="logging_level3";
+	 String db_name ="logging_level4";
 	 String userName = "sangeetal"; 
 	 String password = "sangeetal";
 	
 	//@Note: create this file using create_file_listing.py
-	 String listing_file_path = "E:\\Sangeeta\\Research\\Logging3\\result\\cloudstack-4.3.0_java_files.txt";  
-	 String non_logged_file_path = "E:\\Sangeeta\\Research\\Logging3\\result\\cloudstack_non_log_catch.txt";
-	 String logged_file_path = "E:\\Sangeeta\\Research\\Logging3\\result\\cloudstack_log_catch.txt";
-	  String table = "cloudstack_catch_training3";
+	 String listing_file_path = "E:\\Sangeeta\\Research\\L4ELP\\result\\cloudstack-4.3.0_java_files.txt";  
+	 String non_logged_file_path = "E:\\Sangeeta\\Research\\L4ELP\\result\\cloudstack_non_log_catch.txt";
+	 String logged_file_path = "E:\\Sangeeta\\Research\\L4ELP\\result\\cloudstack_log_catch.txt";
+	  String table = "cloudstack_catch_training4";
    //*/
 	 
 

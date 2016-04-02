@@ -16,5 +16,6 @@
 	<classpathentry kind="lib" path="F:/Research/jarfiles/java-parser-libraries/org.eclipse.jdt.core_3.5.2.v_981_R35x.jar"/>
 	<classpathentry kind="lib" path="F:/Research/jarfiles/java-parser-libraries/org.eclipse.osgi_3.5.2.R35x_v20100126.jar"/>
 	<classpathentry kind="lib" path="F:/Research/jarfiles/github-java-parser-library/javaparser-core-2.0.0.jar"/>
+	<classpathentry kind="lib" path="F:/Research/jarfiles/mysql-connector-java-5.1.13-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
