@@ -294,7 +294,7 @@ public void methodVisitor(String content)
         	log_level_interface tli_if = new log_level_interface();
         	
         	String method_if_between_con = " " ;    	    
-        	util3_met utm =  new util3_met();
+        	util4_met utm =  new util4_met();
         	
         	
         	//Contextualfeaturess                
@@ -499,7 +499,7 @@ public void insert(String if_block, String if_expr, String method_if_between_con
     	logged =1;
     }*/
     
-    util3_met  utm =  new util3_met();	  
+    util4_met  utm =  new util4_met();	  
     method_if_between_con = utm.replace_quotes_string(method_if_between_con);
     if_block = utm.replace_quotes_string(if_block);
     

@@ -345,7 +345,7 @@ public void methodVisitor(String content)
         public boolean visit(TryStatement mytry) 
         {
         	reset_try_flags();
-        	util3_met utm = new util3_met();
+        	util4_met utm = new util4_met();
         	log_level_interface tli = new log_level_interface();
         	method_name_and_count mnc_try =  new method_name_and_count();
         	operator_and_operator_count oaoc_try = new operator_and_operator_count();
@@ -685,7 +685,7 @@ public void write_in_db(int try_id, int catch_id, String try_con, String catch_c
 		int is_return_till_try , int throw_throws_till_try, int if_in_till_try, int if_count_in_till_try, int is_assert_till_try)
       {
 	    
-	     util3_met  utm =  new util3_met();	  
+	     util4_met  utm =  new util4_met();	  
 	    // method_content = utm.replace_quotes_string(method_content);
 	     method_try_between_con = utm.replace_quotes_string(method_try_between_con);
 	     try_con = utm.replace_quotes_string(try_con);

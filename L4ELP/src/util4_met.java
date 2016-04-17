@@ -5,6 +5,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -28,7 +32,7 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
  * */
 
 
-public class util3_met 
+public class util4_met 
 {
 
 	public void print_hello()
@@ -1045,6 +1049,47 @@ public int find_final_file_SLOC(String file_content_as_string)
 	
 	return final_file_sloc;
 }
+
+
+// This method will be used to create a new feature to check wthether a given file is logged or not
+public int check_if_java_file_logged(String file_content_as_string) 
+{
+
+ int is_java_file_logged = 0; 
+ util4_met u4m= new util4_met(); 
+ log_level_interface l = new log_level_interface();
+ Remove_Comments  rc =  new Remove_Comments();
+ 
+ try{
+ 			String file_content_without_comment =  rc.remove_comments(file_content_as_string);	
+ 			l=  u4m.find_and_set_logging_level(file_content_without_comment, l);		
+ 			is_java_file_logged = l.logged;
+ 	     	
+ 		}catch(Exception e)
+ 		{
+ 			e.printStackTrace();
+ 		}
+   return is_java_file_logged;
+}
+
+//Uses: This function reads the content of a file and store them in a string
+public static String readFileToString(String filePath) throws IOException
+{
+    StringBuilder fileData = new StringBuilder(1000);
+    BufferedReader reader = new BufferedReader(new FileReader(filePath));
+
+    char[] buf = new char[10];
+    int numRead = 0;
+    while ((numRead = reader.read(buf)) != -1) {
+        //          System.out.println(numRead);
+        String readData = String.valueOf(buf, 0, numRead);
+        fileData.append(readData);
+        buf = new char[1024];
+    }
+    reader.close();
+    return  fileData.toString();    
+}
+
 
 
 

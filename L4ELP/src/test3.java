@@ -15,7 +15,7 @@ public class test3
 			   "		connector.logAccess(request,response,0,true);  " +
 			   "	return false;  ";
 	
-	  util3_met um = new util3_met();
+	  util4_met um = new util4_met();
 	  log_level_interface l = new log_level_interface();
 	//  l =um.find_and_set_logging_level(s7, l);
 	  
