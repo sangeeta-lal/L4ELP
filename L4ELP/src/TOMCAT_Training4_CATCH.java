@@ -28,11 +28,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 /* ===========================@Author Sangeeta========
- *  
- *  
- * 1.Use to write features of logged and non logged catch in database
- * 2.  Used to write logged and non logged catch blocks in a file
- *  
+ * 1. This file is the modification of previous training files as it combines all the string attributes together.
+ *   
  *  */
 
 public class TOMCAT_Training4_CATCH
@@ -123,29 +120,29 @@ public class TOMCAT_Training4_CATCH
 	///*
 	 String url = "jdbc:mysql://localhost:3306/";
 	 String driver = "com.mysql.jdbc.Driver";
-	 String db_name ="logging_level3";
+	 String db_name ="logging4_elp";
 	 String userName = "root"; 
 	 String password = "1234";
 	   
 	//@Note: create this file using create_file_listing.py
-	 String listing_file_path = "F:\\Research\\Logging3\\result\\tomcat-8.0.9_java_files.txt";
-	 String non_logged_file_path = "F:\\Research\\Logging3\\result\\tomcat_non_log_catch.txt";
-	 String logged_file_path = "F:\\Research\\Logging3\\result\\tomcat_log_catch.txt";
-	 String table = "tomcat_catch_training3";
+	 String listing_file_path = "F:\\Research\\L4ELP\\result\\tomcat-8.0.9_java_files.txt";
+	 String non_logged_file_path = "F:\\Research\\L4ELP\\result\\tomcat_non_log_catch.txt";
+	 String logged_file_path = "F:\\Research\\L4ELP\\result\\tomcat_log_catch.txt";
+	 String table = "tomcat_catch_training4";
 	//*/
     
 	/*
 	 String url = "jdbc:mysql://localhost:3307/";
 	 String driver = "com.mysql.jdbc.Driver";
-	 String db_name ="logging_level3";
+	 String db_name ="logging4_elp";
 	 String userName = "sangeetal"; 
 	 String password = "sangeetal";
 	
 	//@Note: create this file using create_file_listing.py
-	 String listing_file_path = "E:\\Sangeeta\\Research\\Logging3\\result\\tomcat-8.0.9_java_files.txt";  
-	 String non_logged_file_path = "E:\\Sangeeta\\Research\\Logging3\\result\\tomcat_non_log_catch.txt";
-	 String logged_file_path = "E:\\Sangeeta\\Research\\Logging3\\result\\tomcat_log_catch.txt";
-	  String table = "tomcat_catch_training3";
+	 String listing_file_path = "E:\\Sangeeta\\Research\\L4ELP\\result\\tomcat-8.0.9_java_files.txt";  
+	 String non_logged_file_path = "E:\\Sangeeta\\Research\\L4ELP\\result\\tomcat_non_log_catch.txt";
+	 String logged_file_path = "E:\\Sangeeta\\Research\\L4ELP\\result\\tomcat_log_catch.txt";
+	  String table = "tomcat_catch_training4";
    //*/
 	 
 	 Connection conn=null;	
@@ -345,7 +342,7 @@ public void methodVisitor(String content)
         public boolean visit(TryStatement mytry) 
         {
         	reset_try_flags();
-        	util3_met utm = new util3_met();
+        	util4_met utm = new util4_met();
         	log_level_interface tli = new log_level_interface();
         	method_name_and_count mnc_try =  new method_name_and_count();
         	operator_and_operator_count oaoc_try = new operator_and_operator_count();
@@ -675,6 +672,7 @@ public void reset_try_flags()
 	is_assert_till_try =0;
 }
 
+/*******************************************************This function is changed to handle the needs of cross project logging prediction*********************************************/
 public void write_in_db(int try_id, int catch_id, String try_con, String catch_con,String method_try_between_con ,String catch_exception, String previous_catch_con, String file_path, 
 		String package_name, String class_name, String method_name,int try_loc, int is_try_logged, int try_log_count, String try_log_levels, int is_catch_logged, int catch_log_count, String catch_log_levels,
 		int have_previous_catches,int previous_catches_logged, int is_return_in_try, int is_return_in_catch, int is_catch_object_ignore, int is_interrupted_exception, int is_thread_sleep_try,
@@ -686,11 +684,14 @@ public void write_in_db(int try_id, int catch_id, String try_con, String catch_c
 		int is_return_till_try , int throw_throws_till_try, int if_in_till_try, int if_count_in_till_try, int is_assert_till_try)
       {
 	    
-	     util3_met  utm =  new util3_met();	  
+	     util4_met  utm =  new util4_met();	  
 	    // method_content = utm.replace_quotes_string(method_content);
 	     method_try_between_con = utm.replace_quotes_string(method_try_between_con);
 	     try_con = utm.replace_quotes_string(try_con);
 	     catch_con =  utm.replace_quotes_string(catch_con);
+	     
+	       
+	     
 	
       String insert_str= "insert into "+table+" values("+try_id+"," + catch_id+",\""+try_con+"\",\""+ catch_con+"\",\""+method_try_between_con+"\",\""+catch_exception+"\",\""+previous_catch_con+
        "\",\""+file_path+"\",\""+package_name+"\",\""

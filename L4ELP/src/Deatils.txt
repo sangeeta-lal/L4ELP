@@ -1,0 +1,11 @@
+
+
+#=======================================================================#
+@Sangeeta:
+@Uses: This file is created just to provide information about various tables
+and queries used in this work.
+#======================================================================#
+
+1. tomcat_catch_training4 : This is the main dataset created for catch-block extraction
+2. `tomcat_catch_complete: This is the dataset created from "tomcat_catch_training4" , the textual features are combined and and is_catch_logged is moved in the begining
+3. tomcat_catch_balance_1:  This table is a small sub-sample consisting of balance number of logged and non-logged instances
