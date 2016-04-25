@@ -29,7 +29,7 @@ project =  "hd_"
 title = 'Hadoop'
 #"""
 
-#"""
+"""
 port=3306
 user="root"
 password="1234"
@@ -37,9 +37,18 @@ database="logging4_elp"
 main_source_table = project+"catch_training4"  # from this table we have to take the data
 insert_table_complete=project+"catch_complete"
 insert_table_balance = project+"catch_balance"
-#"""
+"""
 
-print "insert_table", insert_table_balance
+port=3307
+user="sangeetal"
+password="sangeeta"
+database="logging4_elp"
+main_source_table = project+"catch_training4"  # from this table we have to take the data
+insert_table_complete=project+"catch_complete"
+insert_table_balance = project+"catch_balance"
+#""
+
+
 
 db1= MySQLdb.connect(host="localhost",user=user, passwd=password, db=database, port=port)
 select_cursor = db1.cursor()
@@ -151,7 +160,7 @@ def insert_in_table(insert_table_name, tuple_val):
     +","+ (str)(n_is_return_till_try) +","+ (str)(n_throw_throws_till_try) +","+ (str)(n_if_in_till_try) +","+ (str)(n_if_count_in_till_try)\
     +","+ (str)(n_is_assert_till_try)  +",'"+  text_features+"')"
       
-    print "insert str",insert_str                 
+    #print "insert str",insert_str                 
     insert_cursor.execute(insert_str)                
                 
     
@@ -243,6 +252,7 @@ def create_10_small_ds():
                        
 
 
-#create_one_complete_ds()
+#=========== Run ========================#
+create_one_complete_ds()
 create_10_small_ds()
 
