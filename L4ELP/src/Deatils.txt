@@ -9,3 +9,88 @@ and queries used in this work.
 1. tomcat_catch_training4 : This is the main dataset created for catch-block extraction
 2. `tomcat_catch_complete: This is the dataset created from "tomcat_catch_training4" , the textual features are combined and and is_catch_logged is moved in the begining
 3. tomcat_catch_balance_1:  This table is a small sub-sample consisting of balance number of logged and non-logged instances
+
+following are the new tables:
+
+
+2.CREATE TABLE `tomcat_catch_complete` (
+  `try_id` int(11) NOT NULL DEFAULT '0',
+  `catch_id` mediumint(11) NOT NULL DEFAULT '0',
+  `is_catch_logged` tinyint(4) DEFAULT NULL,
+  `try_loc` int(11) DEFAULT NULL,
+  `is_try_logged` tinyint(4) DEFAULT NULL,
+  `try_log_count` int(11) DEFAULT NULL,
+  `have_previous_catches` tinyint(4) DEFAULT NULL,
+  `previous_catches_logged` tinyint(4) DEFAULT NULL,
+  `is_return_in_try` tinyint(4) DEFAULT NULL,
+  `is_return_in_catch` tinyint(4) DEFAULT NULL,
+  `is_catch_object_ignore` tinyint(4) DEFAULT NULL,
+  `is_interrupted_exception` tinyint(4) DEFAULT NULL,
+  `is_thread_sleep_try` tinyint(4) DEFAULT NULL,
+  `throw_throws_try` tinyint(4) DEFAULT NULL,
+  `throw_throws_catch` tinyint(4) DEFAULT NULL,
+  `if_in_try` tinyint(4) DEFAULT NULL,
+  `if_count_in_try` mediumint(9) DEFAULT NULL,
+  `is_assert_in_try` tinyint(4) DEFAULT NULL,
+  `is_assert_in_catch` tinyint(4) DEFAULT NULL,
+  `is_method_have_param` tinyint(4) DEFAULT NULL,
+  `method_param_count` mediumint(9) DEFAULT NULL,
+  `method_call_count_try` int(11) DEFAULT NULL,
+  `operators_count_in_try` int(11) DEFAULT NULL,
+  `variables_count_try` int(11) DEFAULT NULL,
+  `method_call_count_till_try` int(11) DEFAULT NULL,
+  `operators_count_till_try` int(11) DEFAULT NULL,
+  `variables_count_till_try` int(11) DEFAULT NULL,
+  `loc_till_try` int(11) DEFAULT NULL,
+  `is_till_try_logged` tinyint(4) DEFAULT NULL,
+  `till_try_log_count` int(11) DEFAULT NULL,
+  `is_return_till_try` tinyint(4) DEFAULT NULL,
+  `throw_throws_till_try` tinyint(4) DEFAULT NULL,
+  `if_in_till_try` tinyint(4) DEFAULT NULL,
+  `if_count_in_till_try` int(11) DEFAULT NULL,
+  `is_assert_till_try` tinyint(4) DEFAULT NULL,
+  `all_text_feature_cleaned` longtext CHARACTER SET latin1,
+  PRIMARY KEY (`try_id`,`catch_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+3.  CREATE TABLE `tomcat_catch_balance_1` (
+  `try_id` int(11) NOT NULL DEFAULT '0',
+  `catch_id` mediumint(11) NOT NULL DEFAULT '0',
+  `is_catch_logged` tinyint(4) DEFAULT NULL,
+  `try_loc` int(11) DEFAULT NULL,
+  `is_try_logged` tinyint(4) DEFAULT NULL,
+  `try_log_count` int(11) DEFAULT NULL,
+  `have_previous_catches` tinyint(4) DEFAULT NULL,
+  `previous_catches_logged` tinyint(4) DEFAULT NULL,
+  `is_return_in_try` tinyint(4) DEFAULT NULL,
+  `is_return_in_catch` tinyint(4) DEFAULT NULL,
+  `is_catch_object_ignore` tinyint(4) DEFAULT NULL,
+  `is_interrupted_exception` tinyint(4) DEFAULT NULL,
+  `is_thread_sleep_try` tinyint(4) DEFAULT NULL,
+  `throw_throws_try` tinyint(4) DEFAULT NULL,
+  `throw_throws_catch` tinyint(4) DEFAULT NULL,
+  `if_in_try` tinyint(4) DEFAULT NULL,
+  `if_count_in_try` mediumint(9) DEFAULT NULL,
+  `is_assert_in_try` tinyint(4) DEFAULT NULL,
+  `is_assert_in_catch` tinyint(4) DEFAULT NULL,
+  `is_method_have_param` tinyint(4) DEFAULT NULL,
+  `method_param_count` mediumint(9) DEFAULT NULL,
+  `method_call_count_try` int(11) DEFAULT NULL,
+  `operators_count_in_try` int(11) DEFAULT NULL,
+  `variables_count_try` int(11) DEFAULT NULL,
+  `method_call_count_till_try` int(11) DEFAULT NULL,
+  `operators_count_till_try` int(11) DEFAULT NULL,
+  `variables_count_till_try` int(11) DEFAULT NULL,
+  `loc_till_try` int(11) DEFAULT NULL,
+  `is_till_try_logged` tinyint(4) DEFAULT NULL,
+  `till_try_log_count` int(11) DEFAULT NULL,
+  `is_return_till_try` tinyint(4) DEFAULT NULL,
+  `throw_throws_till_try` tinyint(4) DEFAULT NULL,
+  `if_in_till_try` tinyint(4) DEFAULT NULL,
+  `if_count_in_till_try` int(11) DEFAULT NULL,
+  `is_assert_till_try` tinyint(4) DEFAULT NULL,
+  `all_text_feature_cleaned` longtext CHARACTER SET latin1,
+  PRIMARY KEY (`try_id`,`catch_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
