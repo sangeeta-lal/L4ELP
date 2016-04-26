@@ -41,7 +41,7 @@ insert_table_balance = project+"catch_balance"
 
 port=3307
 user="sangeetal"
-password="sangeeta"
+password="sangeetal"
 database="logging4_elp"
 main_source_table = project+"catch_training4"  # from this table we have to take the data
 insert_table_complete=project+"catch_complete"
