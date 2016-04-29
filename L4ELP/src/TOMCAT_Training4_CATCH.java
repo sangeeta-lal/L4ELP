@@ -436,7 +436,7 @@ public void methodVisitor(String content)
         	//**  variables_count_till_try =           //
         	VariableVisitor_method_try_between_con(method_try_between_con);   
         	
-        	loc_till_try = utm.get_loc(method_try_between_con);          	    	
+        	loc_till_try = utm.get_new_sloc(method_try_between_con);          	    	
         	tli_till_try = utm.find_and_set_logging_level(method_try_between_con, tli_till_try);
         	is_till_try_logged  = tli_till_try.logged;
         	till_try_log_count =  tli_till_try.log_count;

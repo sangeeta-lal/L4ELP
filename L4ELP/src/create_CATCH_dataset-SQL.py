@@ -253,6 +253,8 @@ def create_10_small_ds():
 
 
 #=========== Run ========================#
-create_one_complete_ds()
-create_10_small_ds()
+#create_one_complete_ds()
+#create_10_small_ds()
+
+print " This file is no longer used as the file CREATE_CATCH_DATASET_ARFFF is used"
 

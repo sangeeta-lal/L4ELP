@@ -72,7 +72,7 @@ public class util4_met
 			String content_lines [] =  content_without_comment.split("\n");
 			int length = content_lines.length;
 			
-			;
+			
 			for(int i=0; i<length;i++)
 			{
 				String line_val ="";
@@ -94,11 +94,46 @@ public class util4_met
 		
 		
 	}
+	
+	
+	
+	// This function computes the SLOC of BLOCKS
+	public int get_new_sloc(String con)
+		{
+			int sloc = 0;
+			 Remove_Comments rc =  new Remove_Comments();
+			   	
+				String content_without_comment  =  rc.remove_comments(con);	
+				String content_lines [] =  content_without_comment.split("\n");
+				int length = content_lines.length;
+				
+				
+				for(int i=0; i<length;i++)
+				{
+					String line_val ="";
+			        line_val= content_lines[i];
+				    line_val = line_val.trim();
+					    
+				      if((is_blank_line(line_val)!=true)&&(is_import_or_package_stmt(line_val)!=true)&&(is_brace_only(line_val)!=true))
+				      {
+				    	// System.out.println("Line Val ="+ line_val);
+				    	  sloc++;
+				    	 // System.out.println("File SLOC ="+ final_file_sloc);
+				    	  
+				      }   //if blank
+						 		
+							 
+				}// for loop
+				
+				return sloc;
+			
+			
+		}
 
 	
 	
-	//This function is used for counting LOC 
-	public int get_loc(String con)
+	//This function is commented becuase I want new method for counting SLOC
+	/*public int get_loc(String con)
 	{
 		int loc=0;
 		String loc_arr[] = con.split("\n");
@@ -111,7 +146,7 @@ public class util4_met
 		}
 			
 		return loc;
-	}
+	}*/
 	
 	public log_level_interface find_and_set_logging_level(String string_content, log_level_interface l) 
 	{

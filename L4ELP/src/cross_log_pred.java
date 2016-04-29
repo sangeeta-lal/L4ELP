@@ -15,14 +15,11 @@ import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.converters.ArffSaver;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
+import weka.filters.supervised.attribute.Discretize;
 import weka.filters.unsupervised.attribute.StringToWordVector;
-
-
-
-
-
 
 
 
@@ -46,30 +43,38 @@ public class cross_log_pred
 		  filter.setIDFTransform(true);
 		  filter.setInputFormat(trains);
 		  trains = Filter.useFilter(trains, filter);
-
+		  Discretize dfilter = new Discretize();
+		  dfilter.setInputFormat(trains);
+		  trains = Filter.useFilter(trains, dfilter);
+		  
 		  
 		// DataSource testsource = new DataSource("F:\\Research\\L4ELP\\dataset\\cloudstack-arff\\catch\\balance\\cloudstack_catch_balance_1.arff");	
 		  DataSource testsource = new DataSource("F:\\sms-test.arff");		
 	      Instances tests = testsource.getDataSet();
 		  tests.setClassIndex(0);		  
 		  tests = Filter.useFilter(tests, filter);
+		//  Discretize dfilter = new Discretize();
+		  //dfilter.setInputFormat(trains);
+		  //tests = Filter.useFilter(tests, dfilter);
 		  
 		  
 		  System.out.println("  Filter Train Data="+ trains.numInstances()+  "   test="+ tests.numInstances());
 			
 			/****  Print value of each attribute   ***/
-			/*for (int i=0; i<tests.numAttributes(); i++)
+		for (int i=0; i<trains.numAttributes(); i++)
 			{
 				
 				 // Print the current attribute.
-			    System.out.print(tests.attribute(i).name() + ": ");
+			    System.out.print(trains.attribute(i).name() + ": ");
 
 			    // Print the values associated with the current attribute.
-			    double[] values = tests.attributeToDoubleArray(i);
+			    double[] values = trains.attributeToDoubleArray(i);
 			    System.out.println(Arrays.toString(values));
-			}*/
+			}
 			
-		  J48 tree = new J48(); 
+		   // J48 tree = new J48(); 
+		//  Logistic tree= new Logistic();
+		  BayesNet tree= new BayesNet();
 		  tree.buildClassifier(trains);
 		  
 		  Evaluation eval = new Evaluation(trains);
@@ -128,8 +133,8 @@ public class cross_log_pred
 			  FileOutputStream out3 = new FileOutputStream(outFile3, true);
 			
 		
-		 DataSource trainsource = new DataSource("F:\\Research\\L4ELP\\dataset\\tomcat-arff\\catch\\complete\\tomcat_catch_complete.arff");	
-   	   //DataSource trainsource = new DataSource("F:\\sms-train.arff");		
+		 //DataSource trainsource = new DataSource("F:\\Research\\L4ELP\\dataset\\tomcat-arff\\catch\\complete\\tomcat_catch_complete.arff");	
+   	     DataSource trainsource = new DataSource("F:\\sms-train.arff");		
 		  
 		  Instances trains = trainsource.getDataSet();
 		  trains.setClassIndex(0);
@@ -138,36 +143,57 @@ public class cross_log_pred
 		  filter.setIDFTransform(true);
 		  filter.setInputFormat(trains);
 		  trains = Filter.useFilter(trains, filter);
+		 
+		  ArffSaver saver = new ArffSaver();
+	        saver.setInstances(trains);
+	        saver.setFile(new File("F:\\result\\tom_idf.arff"));
+	        //saver.setDestination(new File(args[1]));
+	        saver.writeBatch();
 
+	        Discretize dfilter = new Discretize();
+			  dfilter.setInputFormat(trains);
+			 trains = Filter.useFilter(trains, dfilter);
+			 saver.setInstances(trains);
+		        saver.setFile(new File("F:\\result\\tom_des.arff"));
+		        saver.writeBatch();
+			   
+	        
 		  
 		  DataSource testsource = new DataSource("F:\\Research\\L4ELP\\dataset\\cloudstack-arff\\catch\\balance\\cloudstack_catch_balance_1.arff");	
-		//  DataSource testsource = new DataSource("F:\\sms-test.arff");		
+		 //  DataSource testsource = new DataSource("F:\\sms-test.arff");		
 	      Instances tests = testsource.getDataSet();
 		  tests.setClassIndex(0);		  
 		  tests = Filter.useFilter(tests, filter);
+		  //tests = Filter.useFilter(tests, dfilter);
+			
 		  
 		  
-		  Classifier[] cfsArray = new Classifier[6]; 
+		  Classifier[] cfsArray = new Classifier[5]; 
 		  Logistic cfs1= new Logistic();
-		  BayesNet cfs2= new BayesNet();
+		  //BayesNet cfs2= new BayesNet();
 		  RBFNetwork cfs3= new RBFNetwork();
 		  MultilayerPerceptron cfs4= new MultilayerPerceptron();
 		  ADTree cfs5= new ADTree();
 		  DecisionTable cfs6= new DecisionTable();
 		  
 		  cfsArray[0]=cfs1;
-		  cfsArray[1]=cfs2;
-		  cfsArray[2]=cfs3;
-		  cfsArray[3]=cfs4;
-		  cfsArray[4]=cfs5;
-		  cfsArray[5]=cfs6;
+		  
+		  //cfsArray[1]=cfs2;
+		  cfsArray[1]=cfs3;
+		  cfsArray[2]=cfs4;
+		  cfsArray[3]=cfs5;
+		  cfsArray[4]=cfs6;
 		 
-		  BayesNet cfsm=new BayesNet();
+		  
+		//  BayesNet cfsm=new BayesNet();
+		  ADTree cfsm= new ADTree();
 		  
 		  Stacking ensemble= new Stacking();
 		  ensemble.setClassifiers(cfsArray);
+		  System.out.println("here1");
 		  ensemble.setMetaClassifier(cfsm);
 		  ensemble.setSeed(1);
+		  System.out.println("here");
 		  ensemble.buildClassifier(trains);
 		  
 		  
@@ -275,7 +301,7 @@ public class cross_log_pred
 	public static void main(String args[])
 	{
 		cross_log_pred obj = new cross_log_pred();
-		//obj.direct_pred();
+	//	obj.direct_pred();
 		
 		obj.use_ensemble();
 		

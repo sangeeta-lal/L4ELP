@@ -16,37 +16,39 @@ import utill4
 
 #Project
 #"""
-project= "tomcat_"
+project= "tomcat"
 title = 'Tomcat'
 #"""
 """
-project =  "cloudstack_"
+project =  "cloudstack"
 title = 'CloudStack'
 #"""
 
 """
-project =  "hd_"
+project =  "hd"
 title = 'Hadoop'
 #"""
 
-"""
+#"""
 port=3306
 user="root"
 password="1234"
 database="logging4_elp"
-main_source_table = project+"catch_training4"  # from this table we have to take the data
-insert_table_complete=project+"catch_complete"
-insert_table_balance = project+"catch_balance"
+main_source_table = project+"_catch_training4"  # from this table we have to take the data
+path = "F:\\Research\\L4ELP\\dataset\\"
+complete_db_file_path=path+project+"-arff\\catch\\complete\\"+project+"_catch_complete.arff"
+small_balance_db_file_path = path+ project+"-arff\\catch\\balance\\"+project+"_catch_balance"
 """
 
 port=3307
 user="sangeetal"
 password="sangeetal"
 database="logging4_elp"
-main_source_table = project+"catch_training4"  # from this table we have to take the data
-insert_table_complete=project+"catch_complete"
-insert_table_balance = project+"catch_balance"
-#""
+main_source_table = project+"_catch_training4"  # from this table we have to take the data
+path = "F:\\Sangeeta\\Research\\L4ELP\\dataset\\"
+complete_db_file_path=path+project+"-arff\\catch\\complete\\"+project+"_catch_complete.arff"
+small_balance_db_file_path = path+ project+"-arff\\catch\\balance\\"+project+"_catch_balance"
+#"""
 
 
 
@@ -57,9 +59,55 @@ insert_cursor = db1.cursor()
 
 
 #=======================================================#
-# @uses: Function to insert data in the table
+#  @Uses:Write_header() is a function that is used toinsert
+# the ARFF header in the file.
 #=======================================================#
-def insert_in_table(insert_table_name, tuple_val):
+def write_header(file_obj,relation_name):
+    
+    file_obj.write("@relation    "  + relation_name+"\n" )
+    file_obj.write("@attribute is_catch_logged {0,1}  "+"\n")
+    file_obj.write("@attribute try_loc numeric "+"\n")
+    file_obj.write("@attribute is_try_logged {0,1}"+"\n")
+    file_obj.write("@attribute try_log_count numeric "+"\n")
+    file_obj.write("@attribute have_previous_catches {0,1} "+"\n")
+    file_obj.write("@attribute previous_catches_logged {0,1} "+"\n")
+    file_obj.write("@attribute is_return_in_try {0,1} "+"\n")
+    file_obj.write("@attribute is_return_in_catch {0,1} "+"\n")
+    file_obj.write("@attribute is_catch_object_ignore {0,1} "+"\n")
+    file_obj.write("@attribute is_interrupted_exception {0,1} "+"\n")
+    file_obj.write("@attribute is_thread_sleep_try {0,1} "+"\n")
+    file_obj.write("@attribute throw_throws_try {0,1} "+"\n")
+    file_obj.write("@attribute throw_throws_catch {0,1} "+"\n")
+    file_obj.write("@attribute if_in_try {0,1} "+"\n")
+    file_obj.write("@attribute if_count_in_try numeric "+"\n")
+    file_obj.write("@attribute is_assert_in_try {0,1} "+"\n")
+    file_obj.write("@attribute is_assert_in_catch {0,1} "+"\n")
+    file_obj.write("@attribute is_method_have_param {0,1} "+"\n")
+    file_obj.write("@attribute method_param_count numeric "+"\n")
+    file_obj.write("@attribute method_call_count_try numeric "+"\n")
+    file_obj.write("@attribute operators_count_in_try numeric "+"\n")
+    file_obj.write("@attribute variables_count_try numeric "+"\n")
+    file_obj.write("@attribute method_call_count_till_try numeric "+"\n")
+    file_obj.write("@attribute operators_count_till_try numeric "+"\n")
+    file_obj.write("@attribute variables_count_till_try numeric "+"\n")
+    file_obj.write("@attribute loc_till_try numeric "+"\n")
+    file_obj.write("@attribute is_till_try_logged {0,1} "+"\n")
+    file_obj.write("@attribute till_try_log_count numeric "+"\n")
+    file_obj.write("@attribute is_return_till_try {0,1} "+"\n")
+    file_obj.write("@attribute throw_throws_till_try {0,1} "+"\n")
+    file_obj.write("@attribute if_in_till_try {0,1} "+"\n")
+    file_obj.write("@attribute if_count_in_till_try numeric "+"\n")
+    file_obj.write("@attribute is_assert_till_try {0,1} "+"\n")
+    file_obj.write("@attribute all_text_feature_cleaned string "+"\n")
+    
+    file_obj.write("\n")
+    file_obj.write("@data " +"\n")
+        
+    
+#=======================================================#
+# @uses: Function to write in file ceate arff files
+#=======================================================#
+def write_in_file(file_obj, tuple_val):
     
     t_catch_exc     = tuple_val[0]
     t_package_name  = tuple_val[1]
@@ -148,10 +196,10 @@ def insert_in_table(insert_table_name, tuple_val):
     
     text_features =  text_features.strip()
     
-    print "inserting try id=", try_id
+    print "writing try id=", try_id
     
     #====Insert the data in the table=====#
-    insert_str =  "insert into  "+ insert_table_name + " values ("+ (str)(try_id) +","+(str)(catch_id) +","+ (str)(is_catch_logged) +","+ (str)(n_try_loc) +","+ (str)(n_is_try_logged)  +","+ (str)(n_try_log_count)\
+    write_str =  ""+ (str)(is_catch_logged) +","+ (str)(n_try_loc) +","+ (str)(n_is_try_logged)  +","+ (str)(n_try_log_count)\
     +","+ (str)(n_have_previous_catches) +","+ (str)(n_previous_catches_logged)  +","+ (str)(n_is_return_in_try) +","+ (str)(n_is_return_in_catch) +","+ (str)(n_is_catch_object_ignore) +","+ (str)(n_is_interrupted_exception)\
     +","+ (str)(n_is_thread_sleep_try)  +","+ (str)(n_throw_throws_try)  +","+ (str)(n_throw_throws_catch) +","+ (str)(n_if_in_try) +","+ (str)(n_if_count_in_try) +","+ (str)(n_is_assert_in_try)\
     +","+ (str)(n_is_assert_in_catch) +","+ (str)(n_is_method_have_param) +","+ (str)(n_method_param_count)  +","+ (str)(n_method_call_count_try) +","+ (str)(n_operators_count_in_try)\
@@ -160,17 +208,17 @@ def insert_in_table(insert_table_name, tuple_val):
     +","+ (str)(n_is_return_till_try) +","+ (str)(n_throw_throws_till_try) +","+ (str)(n_if_in_till_try) +","+ (str)(n_if_count_in_till_try)\
     +","+ (str)(n_is_assert_till_try)  +",'"+  text_features+"')"
       
-    #print "insert str",insert_str                 
-    insert_cursor.execute(insert_str)                
+    # ==write in the file======#  
+    file_obj.write(write_str+"\n")       
                 
     
     #target.append(0)  Removing from here moving up                  
-    db1.commit()           
+    #db1.commit()           
     
     
 
 
-def create_one_complete_ds():
+def create_one_complete_file(complete_db_file_path):
     #===========Read all the catch blocks===============================#
     str_total_data = "select  catch_exc, package_name, class_name, method_name, try_loc, is_try_logged, try_log_count, try_log_levels, have_previous_catches, previous_catches_logged, \
                       is_return_in_try, is_return_in_catch, is_catch_object_ignore, is_interrupted_exception, is_thread_sleep_try,\
@@ -189,20 +237,29 @@ def create_one_complete_ds():
     #===========================================#
     #@ 1. Create the complete database    
     #===========================================#
-    for d in total_data:   
-        insert_in_table(insert_table_complete, d)
+   
+    file_obj =  open(complete_db_file_path, 'w+')
+   
+    # 1. Write header in the file
+    relation_name =  project +"_catch_complete"
+    write_header(file_obj, relation_name)
     
+    #2. write database ibstabces
+    for d in total_data:   
+        write_in_file(file_obj, d)
+    
+    
+    file_obj.close()
 
 #===========================================#
-#@ 2. Create 10 small dataset
+#@ 2. Create 10 small dataset (balance)
 #===========================================#    
-def create_10_small_ds():
+def create_10_small_balance_files():
 
     number_of_small_ds = 10
     for i in range(number_of_small_ds):
         
-        global insert_table_balance     
-        new_table    =  insert_table_balance+"_"+(str)(i+1)
+  
     
         #===========Read all the catch blocks===============================#
         str_logged_data = "select  catch_exc, package_name, class_name, method_name, try_loc, is_try_logged, try_log_count, try_log_levels, have_previous_catches, previous_catches_logged, \
@@ -218,8 +275,22 @@ def create_10_small_ds():
         logged_data = select_cursor.fetchall()
         
         logged_data_count =  len(logged_data)
+        
+        #===================================#
+       
+        #==open file ===#
+        global small_balance_db_file_path
+        file_path =  small_balance_db_file_path+"_"+(str)(i+1)+".arff"        
+        file_obj =  open(file_path, 'w+')
+        
+        #====  1. Write Header============= #
+        relation_name =  project +"_catch_balance_"+(str)(i+1)
+        write_header(file_obj, relation_name)
+    
+        
+        #====  2. Write Instances=============#
         for d in logged_data:   
-            insert_in_table(new_table, d)            
+            write_in_file(file_obj, d)            
             
             
         str_non_logged_data = "select  catch_exc, package_name, class_name, method_name, try_loc, is_try_logged, try_log_count, try_log_levels, have_previous_catches, previous_catches_logged, \
@@ -248,11 +319,14 @@ def create_10_small_ds():
    
             valid_index= valid_index+1
             if valid_index in indices: 
-                insert_in_table(new_table, d)    
+                write_in_file(file_obj, d)    
                        
-
+        
+        file_obj.close()  
 
 #=========== Run ========================#
-create_one_complete_ds()
-create_10_small_ds()
+
+
+create_one_complete_file(complete_db_file_path)
+create_10_small_balance_files()
 
