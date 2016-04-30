@@ -1,5 +1,11 @@
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
@@ -29,8 +35,25 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
 public class cross_log_pred_CATCH_simple
 {
 
-	//String path = "E:\\Sangeeta\\Research\\";
+	/*
+	 String path = "E:\\Sangeeta\\Research\\";
+	 String user_name =  "sangeetal";
+	 String password = "sangeetal";
+	 String url = "jdbc:mysql://localhost:3307/";
+	 String driver = "com.mysql.jdbc.Driver"; 
+	  
+	// */
+	
+	///*
 	String path = "F:\\Research\\";
+	String user_name =  "root";
+	String password = "1234";
+	String url = "jdbc:mysql://localhost:3306/";
+	String driver = "com.mysql.jdbc.Driver";
+	//*/
+	 String db_name ="logging4_elp";
+	 String result_table = "cross_log_pred_catch_simple";
+	
 	
 	String source_project="tomcat";
 	String target_project = "cloudstack";
@@ -55,6 +78,8 @@ public class cross_log_pred_CATCH_simple
 	
 	int instance_count_source = 0;
 	int instance_count_target =0;
+	Connection conn=null;	
+    java.sql.Statement stmt = null;
    
 	
 // This function uses dataset from the ARFF files
@@ -152,7 +177,7 @@ public Evaluation cross_pred(Classifier model)
 }
 
 // This method computes the results of classifier
-public void avg_10_db_metrics_and_insert(Classifier classifier, FastVector pred_10_db)
+public void avg_10_db_metrics_and_insert(String classifier_name, FastVector pred_10_db, Connection conn)
 {
 	 // computes following metrics:
 	/* 1. TP
@@ -163,21 +188,55 @@ public void avg_10_db_metrics_and_insert(Classifier classifier, FastVector pred_
 	 * 6. F measure
 	 * 7. ROC 
 	 * */
-	double correct = 0;
-	for (int i = 0; i < pred_10_db.size(); i++)
-	{
-		NominalPrediction np = (NominalPrediction) pred_10_db.elementAt(i);
-		if (np.predicted() == np.actual()) {
-			correct++;
-		}
-	}
 
-	double accuracy =  100 * correct / pred_10_db.size();
-	System.out.println("Acc = "+ accuracy + "  size="+ pred_10_db.size());
+	double avg_precision = 0.0;
+	double avg_recall = 0.0;
+	double avg_accuracy = 0.0;
+	double avg_fmeasure = 0.0;	
+	double roc = 0.0;
+	double total_instances = 0.0;
 	
+	util4_met  ut = new util4_met();
+	
+	avg_precision = ut.compute_precision(pred_10_db);
+	avg_recall = ut.compute_recall(pred_10_db);
+	avg_fmeasure = ut.compute_fmeasure(pred_10_db);
+	avg_accuracy =  ut.compute_accuracy(pred_10_db);
+	
+    System.out.println("Acc = "+ avg_accuracy + "  size="+ pred_10_db.size());
+	
+	String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ target_project+"','"+ classifier_name+"',"+ trains.numInstances() + ","+ tests.numInstances()+","
+	                       + 10+","+avg_precision+","+ avg_recall+","+avg_fmeasure+","+ avg_accuracy +" )";
+	
+	
+	try 
+	{
+		stmt = conn.createStatement();
+		stmt.executeUpdate(insert_str);
+	} catch (SQLException e) {
+		
+		e.printStackTrace();
+	}
 	
 }
 
+public Connection initdb(String db_name)
+{
+	 try {
+		      Class.forName(driver).newInstance();
+		      conn = DriverManager.getConnection(url+db_name,user_name,password);
+		      //System.out.println(" dbname="+ db_name+ "user name"+ userName+ " password="+ password);
+		      if(conn==null)
+		      {
+		    	  System.out.println(" Database connection is null. Check it.");
+		      }
+		      
+		 } catch (Exception e) 
+		 {
+		      e.printStackTrace();
+		 }
+		return conn;
+}
 
 // This is the function created to store the files to help in debugging
   public void save_file_temp_location(Instances trains2, Instances tests2)
@@ -208,18 +267,26 @@ public static void main(String args[])
 	  
 	  Classifier models [] = {  new Logistic(),
 			  					new BayesNet(),
-			  					new RBFNetwork(),
-			  					new MultilayerPerceptron(),
+			  					new RBFNetwork(),			  					
 			  					new ADTree(),
-			  					new DecisionTable()}; 
+			  					new DecisionTable(),
+			  					new MultilayerPerceptron()}; 
 	 
 		cross_log_pred_CATCH_simple clp = new cross_log_pred_CATCH_simple();
+		clp.conn = clp.initdb(clp.db_name);
+
+		if(clp.conn==null)
+		{
+			System.out.println(" Databasse connection is null");
+			
+		}
 		
 		// Length of models
 		for(int j=0; j<models.length; j++)
 		{
 			FastVector pred_10_db = new FastVector();
-			for(int i=0; i<1; i++)
+			String classifier_name =  models[j].getClass().getSimpleName();
+			for(int i=0; i<10; i++)
 				{
 					clp.read_file(i+1);
 					clp.pre_process_data();
@@ -227,7 +294,8 @@ public static void main(String args[])
 					pred_10_db.appendElements(clp.result.predictions());
 					
 				}
-			clp.avg_10_db_metrics_and_insert(models[j], pred_10_db);
+		
+			clp.avg_10_db_metrics_and_insert(classifier_name, pred_10_db, clp.conn);
 		}		
 		
 		

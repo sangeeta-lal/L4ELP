@@ -17,6 +17,9 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 
+import weka.classifiers.evaluation.NominalPrediction;
+import weka.core.FastVector;
+
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseException;
 import com.github.javaparser.ast.CompilationUnit;
@@ -1125,6 +1128,171 @@ public static String readFileToString(String filePath) throws IOException
     return  fileData.toString();    
 }
 
+// This function is created to compute the precision of classification
+public double compute_precision(FastVector pred_10_db)
+{
+	double precision = 0.0;
+	int tp=0;
+	int fn=0;
+	int fp=0;
+	int tn=0;
+	
+	for (int i = 0; i < pred_10_db.size(); i++)
+	{
+		NominalPrediction np = (NominalPrediction) pred_10_db.elementAt(i);
+				
+	//coupute tp	
+	  if (np.actual() == 1) 
+	  {
+	     if (np.predicted() == 1) 
+	       {
+			       
+				tp++;
+		    } 
+	     else {
+			       fn++;
+			   }
+	   }
+
+	  else if (np.actual() == 0) 
+	   {
+		   if (np.predicted() == 0)
+		      {
+			       tn++;
+			   }
+		   else {
+			       fp++;
+			     }
+		}
+			    
+	}// for
+
+	if((tp+ fp)>0)
+	{
+	precision = 100* (tp)/ (tp + fp);
+	}
+	return precision;
+}
+
+
+// This function will be used to compute recall of classifcation results
+public double compute_recall(FastVector pred_10_db)
+{
+	double recall = 0.0;
+	int tp=0;
+	int fn=0;
+	int fp=0;
+	int tn=0;
+	
+	for (int i = 0; i < pred_10_db.size(); i++)
+	{
+		NominalPrediction np = (NominalPrediction) pred_10_db.elementAt(i);
+		//coupute tp	
+	  if (np.actual() == 1) 
+	  {
+	     if (np.predicted() == 1) 
+	       {
+			       
+				tp++;
+		    } 
+	     else {
+			       fn++;
+			   }
+	   }
+
+	  else if (np.actual() == 0) 
+	   {
+		   if (np.predicted() == 0)
+		      {
+			       tn++;
+			   }
+		   else {
+			       fp++;
+			     }
+		}
+			    
+	}// for
+
+	if((tp+ fp)>0)
+	{
+	recall = 100* (tp)/ (tp + fn);
+	}
+	return recall;
+}
+
+//This function is created to compute the fmeaure of classification
+public double compute_fmeasure(FastVector pred_10_db)
+{
+	double fmeasure = 0.0;
+	int tp=0;
+	int fn=0;
+	int fp=0;
+	int tn=0;
+	
+	for (int i = 0; i < pred_10_db.size(); i++)
+	{
+		NominalPrediction np = (NominalPrediction) pred_10_db.elementAt(i);
+		
+		
+	//coupute tp	
+	  if (np.actual() == 1) 
+	  {
+	     if (np.predicted() == 1) 
+	       {
+			       
+				tp++;
+		    } 
+	     else {
+			       fn++;
+			   }
+	   }
+
+	  else if (np.actual() == 0) 
+	   {
+		   if (np.predicted() == 0)
+		      {
+			       tn++;
+			   }
+		   else {
+			       fp++;
+			     }
+		}
+			    
+	}// for
+
+	 
+	if((2*tp+fp+fn)>0)
+	{
+	fmeasure = 100* 2* (tp)/ (2*tp + fp+fn);
+	}
+	return fmeasure;
+}
+
+//This function is created to compute accuracy
+public double compute_accuracy(FastVector pred_10_db)
+{
+	double accuracy = 0.0;
+	int tp=0;
+	int fn=0;
+	int fp=0;
+	int tn=0;
+	int correct = 0;
+	
+	for (int i = 0; i < pred_10_db.size(); i++)
+	{
+		NominalPrediction np = (NominalPrediction) pred_10_db.elementAt(i);
+		if (np.predicted() == np.actual()) {
+			correct++;
+		}
+		
+	}
+
+	if((correct)>0)
+	{
+	accuracy = 100* (correct)/ (pred_10_db.size());
+	}
+	return accuracy;
+}
 
 
 
