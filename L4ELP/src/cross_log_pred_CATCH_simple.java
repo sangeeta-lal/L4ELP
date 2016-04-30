@@ -10,12 +10,16 @@ import java.sql.Statement;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
+import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.evaluation.NominalPrediction;
 import weka.classifiers.functions.Logistic;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.functions.RBFNetwork;
+import weka.classifiers.meta.AdaBoostM1;
 import weka.classifiers.rules.DecisionTable;
 import weka.classifiers.trees.ADTree;
+import weka.classifiers.trees.J48;
+import weka.classifiers.trees.RandomForest;
 import weka.core.FastVector;
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;
@@ -270,6 +274,10 @@ public static void main(String args[])
 			  					new RBFNetwork(),			  					
 			  					new ADTree(),
 			  					new DecisionTable(),
+			  					new AdaBoostM1(),
+			  					new J48(),  //Decision Tree
+			  					new RandomForest(),
+			  					new NaiveBayes(),
 			  					new MultilayerPerceptron()}; 
 	 
 		cross_log_pred_CATCH_simple clp = new cross_log_pred_CATCH_simple();
