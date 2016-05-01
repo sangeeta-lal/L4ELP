@@ -300,7 +300,9 @@ public static void main(String args[])
 					clp.pre_process_data();
 					clp.result = clp.cross_pred(models[j]);
 					pred_10_db.appendElements(clp.result.predictions());
-					System.out.println(clp.result.toSummaryString());	
+					
+					//@ Un comment to see the evalauation results
+					//System.out.println(clp.result.toSummaryString());	
 				
 				}
 		
