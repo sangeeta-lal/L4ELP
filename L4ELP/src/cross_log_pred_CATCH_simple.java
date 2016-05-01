@@ -207,6 +207,12 @@ public void avg_10_db_metrics_and_insert(String classifier_name, FastVector pred
 	avg_fmeasure = ut.compute_fmeasure(pred_10_db);
 	avg_accuracy =  ut.compute_accuracy(pred_10_db);
 	
+	// Round all the values to two decimal places
+		avg_precision =  Math.round(avg_precision * 100.0) / 100.0;
+		avg_recall =     Math.round(avg_recall * 100.0) / 100.0;
+		avg_fmeasure =   Math.round(avg_fmeasure * 100.0) / 100.0;
+		avg_accuracy =   Math.round(avg_accuracy * 100.0) / 100.0;
+		
     System.out.println("model ="+classifier_name +"   Acc = "+ avg_accuracy + "  size="+ pred_10_db.size());
 	
 	String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ target_project+"','"+ classifier_name+"',"+ trains.numInstances() + ","+ tests.numInstances()+","
@@ -294,7 +300,7 @@ public static void main(String args[])
 		{
 			FastVector pred_10_db = new FastVector();
 			String classifier_name =  models[j].getClass().getSimpleName();
-			for(int i=0; i<2; i++)
+			for(int i=0; i<10; i++)
 				{
 					clp.read_file(i+1);
 					clp.pre_process_data();
