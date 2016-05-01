@@ -1132,10 +1132,10 @@ public static String readFileToString(String filePath) throws IOException
 public double compute_precision(FastVector pred_10_db)
 {
 	double precision = 0.0;
-	int tp=0;
-	int fn=0;
-	int fp=0;
-	int tn=0;
+	double tp=0.0;
+	double fn=0.0;
+	double fp=0.0;
+	double tn=0.0;
 	
 	for (int i = 0; i < pred_10_db.size(); i++)
 	{
@@ -1169,7 +1169,7 @@ public double compute_precision(FastVector pred_10_db)
 
 	if((tp+ fp)>0)
 	{
-	precision = 100* (tp)/ (tp + fp);
+	precision = 100.0* (tp)/ (tp + fp);
 	}
 	return precision;
 }
@@ -1179,10 +1179,10 @@ public double compute_precision(FastVector pred_10_db)
 public double compute_recall(FastVector pred_10_db)
 {
 	double recall = 0.0;
-	int tp=0;
-	int fn=0;
-	int fp=0;
-	int tn=0;
+	double tp=0.0;
+	double fn=0.0;
+	double fp=0.0;
+	double tn=0.0;
 	
 	for (int i = 0; i < pred_10_db.size(); i++)
 	{
@@ -1215,7 +1215,7 @@ public double compute_recall(FastVector pred_10_db)
 
 	if((tp+ fp)>0)
 	{
-	recall = 100* (tp)/ (tp + fn);
+	recall = 100.0* (tp)/ (tp + fn);
 	}
 	return recall;
 }
@@ -1224,10 +1224,10 @@ public double compute_recall(FastVector pred_10_db)
 public double compute_fmeasure(FastVector pred_10_db)
 {
 	double fmeasure = 0.0;
-	int tp=0;
-	int fn=0;
-	int fp=0;
-	int tn=0;
+	double tp=0.0;
+	double fn=0.0;
+	double fp=0.0;
+	double tn=0.0;
 	
 	for (int i = 0; i < pred_10_db.size(); i++)
 	{
@@ -1263,7 +1263,7 @@ public double compute_fmeasure(FastVector pred_10_db)
 	 
 	if((2*tp+fp+fn)>0)
 	{
-	fmeasure = 100* 2* (tp)/ (2*tp + fp+fn);
+	fmeasure = 100.0* 2.0* (tp)/ (2*tp + fp+fn);
 	}
 	return fmeasure;
 }
@@ -1272,11 +1272,11 @@ public double compute_fmeasure(FastVector pred_10_db)
 public double compute_accuracy(FastVector pred_10_db)
 {
 	double accuracy = 0.0;
-	int tp=0;
-	int fn=0;
-	int fp=0;
-	int tn=0;
-	int correct = 0;
+	double tp=0.0;
+	double fn=0.0;
+	double fp=0.0;
+	double tn=0.0;
+	double correct = 0.0;
 	
 	for (int i = 0; i < pred_10_db.size(); i++)
 	{
@@ -1289,7 +1289,7 @@ public double compute_accuracy(FastVector pred_10_db)
 
 	if((correct)>0)
 	{
-	accuracy = 100* (correct)/ (pred_10_db.size());
+	accuracy = 100.0* (correct)/ (pred_10_db.size());
 	}
 	return accuracy;
 }

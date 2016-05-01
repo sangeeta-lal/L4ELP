@@ -61,13 +61,13 @@ public class cross_log_pred_CATCH_simple
 	
 	String source_project="tomcat";
 	String target_project = "cloudstack";
-	//String target_project="hadoop";
+	//String target_project="hd";
 	
 	//String source_project="cloudstack";
 	//String target_project = "tomcat";
-	//String target_project="hadoop";
+	//String target_project="hd";
 	
-	//String source_project="hadoop";
+	//String source_project="hd";
 	//String target_project = "tomcat";
 	//String target_project="cloudstack";
 	
@@ -98,6 +98,7 @@ public void read_file(int i)
 			
 			testsource = new DataSource(target_file_path+"_"+i+".arff");
 			tests = testsource.getDataSet();
+			
 			tests.setClassIndex(0);
 			
 			instance_count_source = trains.numInstances();
@@ -184,13 +185,12 @@ public Evaluation cross_pred(Classifier model)
 public void avg_10_db_metrics_and_insert(String classifier_name, FastVector pred_10_db, Connection conn)
 {
 	 // computes following metrics:
-	/* 1. TP
-	 * 2. TN
-	 * 3. Precision
-	 * 4. Recall
-	 * 5. Accuracy
-	 * 6. F measure
-	 * 7. ROC 
+	/*
+	 * 1. Precision
+	 * 2. Recall
+	 * 3. Accuracy
+	 * 4. F measure
+	 * 5. ROC 
 	 * */
 
 	double avg_precision = 0.0;
@@ -207,7 +207,7 @@ public void avg_10_db_metrics_and_insert(String classifier_name, FastVector pred
 	avg_fmeasure = ut.compute_fmeasure(pred_10_db);
 	avg_accuracy =  ut.compute_accuracy(pred_10_db);
 	
-    System.out.println("Acc = "+ avg_accuracy + "  size="+ pred_10_db.size());
+    System.out.println("model ="+classifier_name +"   Acc = "+ avg_accuracy + "  size="+ pred_10_db.size());
 	
 	String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ target_project+"','"+ classifier_name+"',"+ trains.numInstances() + ","+ tests.numInstances()+","
 	                       + 10+","+avg_precision+","+ avg_recall+","+avg_fmeasure+","+ avg_accuracy +" )";
@@ -277,8 +277,8 @@ public static void main(String args[])
 			  					new AdaBoostM1(),
 			  					new J48(),  //Decision Tree
 			  					new RandomForest(),
-			  					new NaiveBayes(),
-			  					new MultilayerPerceptron()}; 
+			  					new NaiveBayes()};
+			  					//new MultilayerPerceptron()}; //removed because of high computational requirement
 	 
 		cross_log_pred_CATCH_simple clp = new cross_log_pred_CATCH_simple();
 		clp.conn = clp.initdb(clp.db_name);
@@ -294,15 +294,17 @@ public static void main(String args[])
 		{
 			FastVector pred_10_db = new FastVector();
 			String classifier_name =  models[j].getClass().getSimpleName();
-			for(int i=0; i<10; i++)
+			for(int i=0; i<2; i++)
 				{
 					clp.read_file(i+1);
 					clp.pre_process_data();
 					clp.result = clp.cross_pred(models[j]);
 					pred_10_db.appendElements(clp.result.predictions());
-					
+					System.out.println(clp.result.toSummaryString());	
+				
 				}
 		
+			
 			clp.avg_10_db_metrics_and_insert(classifier_name, pred_10_db, clp.conn);
 		}		
 		
