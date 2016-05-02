@@ -7,8 +7,13 @@ and queries used in this work.
 #======================================================================#
 
 1. tomcat_catch_training4 : This is the main dataset created for catch-block extraction
-2. `tomcat_catch_complete: This is the dataset created from "tomcat_catch_training4" , the textual features are combined and and is_catch_logged is moved in the begining
+2. `tomcat_catch_complete: This is the dataset created from "tomcat_catch_training4" , the textual features are combined and and is_catch_logged is moved in the begining. Some columns are removed as thye were used only for
+house-keeping, were not actual features
 3. tomcat_catch_balance_1:  This table is a small sub-sample consisting of balance number of logged and non-logged instances
+4.within_log_pred_catch: This is the table consisting of results of within project logging prediction
+5.cross_log_pred_catch_simple : This Table consists of results from cross project logging prediction where one project is used for training and one project is used for testing.
+6.cross_two_source_proj_log_pred_catch_simple : This table consists of cross project logging prediction results where two projects are used as source and one project is used as target project.
+
 
 following are the new tables:
 
