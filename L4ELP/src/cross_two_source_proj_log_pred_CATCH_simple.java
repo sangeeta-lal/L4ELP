@@ -300,7 +300,7 @@ public static void main(String args[])
 		{
 			FastVector pred_10_db = new FastVector();
 			String classifier_name =  models[j].getClass().getSimpleName();
-			for(int i=0; i<1; i++)
+			for(int i=0; i<10; i++)
 				{
 					clp.read_file(i+1);
 					clp.pre_process_data();
