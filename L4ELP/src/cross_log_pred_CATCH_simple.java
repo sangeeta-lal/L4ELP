@@ -181,61 +181,6 @@ public Evaluation cross_pred(Classifier model)
 	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
 }
 
-// This method computes the results of classifier
-public void avg_10_db_metrics_and_insert(String classifier_name, FastVector pred_10_db, Connection conn)
-{
-	 // computes following metrics:
-	/*
-	 * 1. Precision
-	 * 2. Recall
-	 * 3. Accuracy
-	 * 4. F measure
-	 * 5. ROC-AUC
-	 * */
-
-	double avg_precision = 0.0;
-	double avg_recall = 0.0;
-	double avg_accuracy = 0.0;
-	double avg_fmeasure = 0.0;	
-	double avg_roc_auc = 0.0;
-	double total_instances = 0.0;
-	
-	util4_met  ut = new util4_met();
-	
-	avg_precision = ut.compute_precision(pred_10_db);
-	avg_recall = ut.compute_recall(pred_10_db);
-	avg_fmeasure = ut.compute_fmeasure(pred_10_db);
-	avg_accuracy =  ut.compute_accuracy(pred_10_db);
-	avg_roc_auc    = ut.compute_roc_auc(pred_10_db);
-	
-		
-   // System.out.println("model ="+classifier_name +"   Acc = "+ avg_accuracy + "  size="+ pred_10_db.size());
-	
-	conn = initdb(db_name);
-
-	if(conn==null)
-	{
-		System.out.println(" Databasse connection is null");
-		
-	}
-	
-	String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ target_project+"','"+ classifier_name+"',"+ trains.numInstances() + ","+ tests.numInstances()+","
-	                       + 10+","+avg_precision+","+ avg_recall+","+avg_fmeasure+","+ avg_accuracy +","+ avg_roc_auc+" )";
-	System.out.println("Inserting="+ insert_str);
-	
-	try 
-	{
-		stmt = conn.createStatement();
-		stmt.executeUpdate(insert_str);
-		conn.close();
-		
-	} catch (SQLException e) {
-		
-		e.printStackTrace();
-	}
-	
-	
-}
 
 public Connection initdb(String db_name)
 {
@@ -303,6 +248,13 @@ public void compute_avg_stdev_and_insert(String classifier_name, double[] precis
 		                       + 10+","+trains.numAttributes() +","+avg_precision+","+ std_precision+","+ avg_recall+","+ std_recall+","+avg_fmeasure+","+std_fmeasure+","+ avg_accuracy 
 		                       +","+std_accuracy+","+ avg_roc_auc+","+ std_roc_auc+" )";
 		System.out.println("Inserting="+ insert_str);
+		
+		conn = initdb(db_name);
+		if(conn==null)
+		{
+			System.out.println(" Databasse connection is null");
+			
+		}
 		
 		try 
 		{
@@ -397,8 +349,66 @@ public static void main(String args[])
 		
 	}
 
-
-
-
 	
 }
+
+
+
+/******************************************************************************************************************/
+/*
+//This method computes the results of classifier
+public void avg_10_db_metrics_and_insert(String classifier_name, FastVector pred_10_db, Connection conn)
+{
+	 // computes following metrics:
+	
+	 // 1. Precision
+	 // 2. Recall
+	 // 3. Accuracy
+	 // 4. F measure
+	 // 5. ROC-AUC
+	 
+
+	double avg_precision = 0.0;
+	double avg_recall = 0.0;
+	double avg_accuracy = 0.0;
+	double avg_fmeasure = 0.0;	
+	double avg_roc_auc = 0.0;
+	double total_instances = 0.0;
+	
+	util4_met  ut = new util4_met();
+	
+	avg_precision = ut.compute_precision(pred_10_db);
+	avg_recall = ut.compute_recall(pred_10_db);
+	avg_fmeasure = ut.compute_fmeasure(pred_10_db);
+	avg_accuracy =  ut.compute_accuracy(pred_10_db);
+	avg_roc_auc    = ut.compute_roc_auc(pred_10_db);
+	
+		
+// System.out.println("model ="+classifier_name +"   Acc = "+ avg_accuracy + "  size="+ pred_10_db.size());
+	  
+	conn = initdb(db_name);
+
+	if(conn==null)
+	{
+		System.out.println(" Databasse connection is null");
+		
+	}
+	
+	String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ target_project+"','"+ classifier_name+"',"+ trains.numInstances() + ","+ tests.numInstances()+","
+	                       + 10+","+avg_precision+","+ avg_recall+","+avg_fmeasure+","+ avg_accuracy +","+ avg_roc_auc+" )";
+	System.out.println("Inserting="+ insert_str);
+	
+	try 
+	{
+		stmt = conn.createStatement();
+		stmt.executeUpdate(insert_str);
+		conn.close();
+		
+	} catch (SQLException e) {
+		
+		e.printStackTrace();
+	}
+	
+	
+}*/
+
