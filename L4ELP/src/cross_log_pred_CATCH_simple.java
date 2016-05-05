@@ -211,6 +211,14 @@ public void avg_10_db_metrics_and_insert(String classifier_name, FastVector pred
 		
    // System.out.println("model ="+classifier_name +"   Acc = "+ avg_accuracy + "  size="+ pred_10_db.size());
 	
+	conn = initdb(db_name);
+
+	if(conn==null)
+	{
+		System.out.println(" Databasse connection is null");
+		
+	}
+	
 	String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ target_project+"','"+ classifier_name+"',"+ trains.numInstances() + ","+ tests.numInstances()+","
 	                       + 10+","+avg_precision+","+ avg_recall+","+avg_fmeasure+","+ avg_accuracy +","+ avg_roc_auc+" )";
 	System.out.println("Inserting="+ insert_str);
@@ -219,10 +227,13 @@ public void avg_10_db_metrics_and_insert(String classifier_name, FastVector pred
 	{
 		stmt = conn.createStatement();
 		stmt.executeUpdate(insert_str);
+		conn.close();
+		
 	} catch (SQLException e) {
 		
 		e.printStackTrace();
 	}
+	
 	
 }
 
@@ -343,13 +354,7 @@ public static void main(String args[])
 			  					//new MultilayerPerceptron()}; //removed because of high computational requirement
 	 
 		cross_log_pred_CATCH_simple clp = new cross_log_pred_CATCH_simple();
-		clp.conn = clp.initdb(clp.db_name);
-
-		if(clp.conn==null)
-		{
-			System.out.println(" Databasse connection is null");
-			
-		}
+		
 		
 		// Length of models
 		for(int j=0; j<models.length; j++)
