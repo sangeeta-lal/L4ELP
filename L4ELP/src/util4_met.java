@@ -1216,7 +1216,7 @@ public double compute_recall(FastVector pred_10_db)
 			    
 	}// for
 
-	if((tp+ fp)>0)
+	if((tp+ fn)>0)
 	{
 	recall = 100.0* (tp)/ (tp + fn);
 	}
