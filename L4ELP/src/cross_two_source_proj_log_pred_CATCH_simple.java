@@ -91,8 +91,9 @@ public void read_file(int i)
 	try 
 		{
 		
-		System.out.println(source_file_path);
-			trainsource = new DataSource(source_file_path);
+		    //System.out.println(source_file_path);
+			
+		    trainsource = new DataSource(source_file_path);
 			trains = trainsource.getDataSet();
 			trains.setClassIndex(0);
 			

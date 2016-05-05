@@ -1171,6 +1171,9 @@ public double compute_precision(FastVector pred_10_db)
 	{
 	precision = 100.0* (tp)/ (tp + fp);
 	}
+	
+	precision =  Math.round(precision * 100.0) / 100.0;
+
 	return precision;
 }
 
@@ -1217,6 +1220,10 @@ public double compute_recall(FastVector pred_10_db)
 	{
 	recall = 100.0* (tp)/ (tp + fn);
 	}
+   
+	recall =     Math.round(recall * 100.0) / 100.0;
+	
+	
 	return recall;
 }
 
@@ -1231,8 +1238,7 @@ public double compute_fmeasure(FastVector pred_10_db)
 	
 	for (int i = 0; i < pred_10_db.size(); i++)
 	{
-		NominalPrediction np = (NominalPrediction) pred_10_db.elementAt(i);
-		
+		NominalPrediction np = (NominalPrediction) pred_10_db.elementAt(i);		
 		
 	//coupute tp	
 	  if (np.actual() == 1) 
@@ -1265,6 +1271,9 @@ public double compute_fmeasure(FastVector pred_10_db)
 	{
 	fmeasure = 100.0* 2.0* (tp)/ (2*tp + fp+fn);
 	}
+	
+	fmeasure =   Math.round(fmeasure * 100.0) / 100.0;
+	
 	return fmeasure;
 }
 
@@ -1291,8 +1300,61 @@ public double compute_accuracy(FastVector pred_10_db)
 	{
 	accuracy = 100.0* (correct)/ (pred_10_db.size());
 	}
+	
+	accuracy =   Math.round(accuracy * 100.0) / 100.0;
 	return accuracy;
 }
+
+
+public double compute_roc_auc(FastVector pred_10_db) 
+{
+	double roc_auc =0.0;
+	// TODO Auto-generated method stub
+	
+	roc_auc =   Math.round(roc_auc * 100.0) / 100.0;
+	return 0.0;
+}
+
+
+// This method computes the average of a given array
+public double compute_mean(double arr[])
+{
+    double sum = 0.0;
+    double mean = 0.0;
+    int size =  arr.length;
+    for(int i=0; i<size; i++)
+    {
+    	sum =  sum + arr[i];
+    }
+    
+    mean = sum/size;
+    mean =  Math.round(mean * 100.0) / 100.0;
+    
+    return mean;
+}
+
+public double compute_stddev(double arr[])
+{
+    double mean = compute_mean(arr);
+    double temp = 0;
+    double variance =0.0;
+    double stddev = 0.0;
+    int size = arr.length;
+    
+    for(int i=0; i<size; i++)
+    {
+    	 temp= temp+ (mean-arr[i])*(mean-arr[i]);	
+    }
+    
+    stddev= Math.sqrt(temp/size);
+    stddev = Math.round(stddev*100.0)/100.0;
+    return stddev;
+}
+/*
+public double getStdDev()
+{
+    return Math.sqrt(getVariance());
+}*/
 
 
 
