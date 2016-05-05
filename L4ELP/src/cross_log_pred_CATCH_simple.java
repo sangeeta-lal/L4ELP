@@ -59,6 +59,7 @@ public class cross_log_pred_CATCH_simple
 	 String result_table = "cross_log_pred_catch_simple";
 	
 	
+	int iterations=10;
 	String source_project="tomcat";
 	String target_project = "cloudstack";
 	//String target_project="hd";
@@ -245,7 +246,7 @@ public void compute_avg_stdev_and_insert(String classifier_name, double[] precis
 	   // System.out.println("model ="+classifier_name +"   Acc = "+ avg_accuracy + "  size="+ pred_10_db.size());
 		
 		String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ target_project+"','"+ classifier_name+"',"+ trains.numInstances() + ","+ tests.numInstances()+","
-		                       + 10+","+trains.numAttributes() +","+avg_precision+","+ std_precision+","+ avg_recall+","+ std_recall+","+avg_fmeasure+","+std_fmeasure+","+ avg_accuracy 
+		                       + iterations+","+trains.numAttributes() +","+avg_precision+","+ std_precision+","+ avg_recall+","+ std_recall+","+avg_fmeasure+","+std_fmeasure+","+ avg_accuracy 
 		                       +","+std_accuracy+","+ avg_roc_auc+","+ std_roc_auc+" )";
 		System.out.println("Inserting="+ insert_str);
 		
@@ -311,7 +312,7 @@ public static void main(String args[])
 		// Length of models
 		for(int j=0; j<models.length; j++)
 		{
-			FastVector pred_10_db = new FastVector();
+			
 			String classifier_name =  models[j].getClass().getSimpleName();
 			
 			double precision[]   = new double[10];
@@ -321,10 +322,11 @@ public static void main(String args[])
 			double roc_auc[]     = new double[10];
 			
 			
-			for(int i=0; i<10; i++)
+			for(int i=0; i<clp.iterations; i++)
 				 {
 				    util4_met ut_obj=  new util4_met();
 				    clp.read_file(i+1);
+				   
 					clp.pre_process_data();
 					clp.result = clp.cross_pred(models[j]);				
 					
@@ -334,7 +336,7 @@ public static void main(String args[])
 					recall[i]            = ut_obj.compute_recall(pred_1_db);
 					accuracy[i]          = ut_obj.compute_accuracy(pred_1_db);
 					fmeasure[i]          = ut_obj.compute_fmeasure(pred_1_db);
-					roc_auc[i]           = ut_obj.compute_roc_auc(pred_10_db);
+					roc_auc[i]           = ut_obj.compute_roc_auc(pred_1_db);
 					//@ Un comment to see the evalauation results
 					//System.out.println(clp.result.toSummaryString());					
 					
