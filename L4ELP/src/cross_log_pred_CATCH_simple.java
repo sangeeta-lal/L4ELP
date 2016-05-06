@@ -324,21 +324,32 @@ public static void main(String args[])
 			
 			for(int i=0; i<clp.iterations; i++)
 				 {
-				    util4_met ut_obj=  new util4_met();
 				    clp.read_file(i+1);
 				   
 					clp.pre_process_data();
 					clp.result = clp.cross_pred(models[j]);				
 					
-					FastVector pred_1_db = clp.result.predictions();
+					//precision[i]          = 
+					//recall[i]            = 
+					//accuracy[i]          = 
+					//fmeasure[i]          = 
+					//roc_auc[i] 
 					
+					
+					 // Alternative way to compute all the metrics mannually
+				    util4_met ut_obj=  new util4_met();
+					FastVector pred_1_db = clp.result.predictions();
 					precision[i]         = ut_obj.compute_precision(pred_1_db);
 					recall[i]            = ut_obj.compute_recall(pred_1_db);
 					accuracy[i]          = ut_obj.compute_accuracy(pred_1_db);
 					fmeasure[i]          = ut_obj.compute_fmeasure(pred_1_db);
-					roc_auc[i]           = ut_obj.compute_roc_auc(pred_1_db);
+					roc_auc[i]           = ut_obj.compute_roc_auc(pred_1_db);//*/
 					
-					
+					System.out.println("pre="+ clp.result.precision(1)+  " precisin[i]="+ precision[i]);
+					System.out.println("rec="+ clp.result.recall(1)+  "   recal[i]="+ recall[i]);
+					System.out.println("acc="+ clp.result.pctCorrect()   + " acc[i]="+ accuracy[i]);
+					System.out.println("fm="+ clp.result.fMeasure(1)+ " fm[i]="+ fmeasure[i]);
+					System.out.println("auc="+ 0.0+   " auc[i]="+ clp.result.areaUnderROC(1));
 					
 					//@ Un comment to see the evalauation results
 					//System.out.println(clp.result.toSummaryString());					
