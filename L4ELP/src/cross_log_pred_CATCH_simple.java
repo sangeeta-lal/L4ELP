@@ -59,7 +59,7 @@ public class cross_log_pred_CATCH_simple
 	 String result_table = "cross_log_pred_catch_simple";
 	
 	
-	int iterations=10;
+	int iterations=2;
 	String source_project="tomcat";
 	String target_project = "cloudstack";
 	//String target_project="hd";
@@ -315,11 +315,11 @@ public static void main(String args[])
 			
 			String classifier_name =  models[j].getClass().getSimpleName();
 			
-			double precision[]   = new double[10];
-			double recall[]      = new double[10];
-			double accuracy[]    = new  double[10];
-			double fmeasure[]    = new double[10];	
-			double roc_auc[]     = new double[10];
+			double precision[]   = new double[clp.iterations];
+			double recall[]      = new double[clp.iterations];
+			double accuracy[]    = new  double[clp.iterations];
+			double fmeasure[]    = new double[clp.iterations];	
+			double roc_auc[]     = new double[clp.iterations];
 			
 			
 			for(int i=0; i<clp.iterations; i++)
