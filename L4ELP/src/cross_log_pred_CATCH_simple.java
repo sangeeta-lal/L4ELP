@@ -226,7 +226,7 @@ public void compute_avg_stdev_and_insert(String classifier_name, double[] precis
 		double std_accuracy = 0.0;
 		double std_fmeasure = 0.0;	
 		double std_roc_auc = 0.0;
-		double total_instances = 0.0;
+		//double total_instances = 0.0;
 		
 		util4_met  ut = new util4_met();
 		
@@ -317,7 +317,7 @@ public static void main(String args[])
 			
 			double precision[]   = new double[clp.iterations];
 			double recall[]      = new double[clp.iterations];
-			double accuracy[]    = new  double[clp.iterations];
+			double accuracy[]    = new double[clp.iterations];
 			double fmeasure[]    = new double[clp.iterations];	
 			double roc_auc[]     = new double[clp.iterations];
 			
@@ -329,36 +329,29 @@ public static void main(String args[])
 					clp.pre_process_data();
 					clp.result = clp.cross_pred(models[j]);				
 					
-					//precision[i]          = 
-					//recall[i]            = 
-					//accuracy[i]          = 
-					//fmeasure[i]          = 
-					//roc_auc[i] 
+					precision[i]         =   clp.result.precision(1)*100;
+					recall[i]            =   clp.result.recall(1)*100;
+					accuracy[i]          =   clp.result.pctCorrect(); //not required to multiply by 100, it is already in percentage
+					fmeasure[i]          =   clp.result.fMeasure(1)*100;
+					roc_auc[i]           =   clp.result.areaUnderROC(1)*100;
 					
 					
 					 // Alternative way to compute all the metrics mannually
-				    util4_met ut_obj=  new util4_met();
+				   /* util4_met ut_obj=  new util4_met();
 					FastVector pred_1_db = clp.result.predictions();
 					precision[i]         = ut_obj.compute_precision(pred_1_db);
 					recall[i]            = ut_obj.compute_recall(pred_1_db);
 					accuracy[i]          = ut_obj.compute_accuracy(pred_1_db);
 					fmeasure[i]          = ut_obj.compute_fmeasure(pred_1_db);
 					roc_auc[i]           = ut_obj.compute_roc_auc(pred_1_db);//*/
-					
-					System.out.println("pre="+ clp.result.precision(1)+  " precisin[i]="+ precision[i]);
-					System.out.println("rec="+ clp.result.recall(1)+  "   recal[i]="+ recall[i]);
-					System.out.println("acc="+ clp.result.pctCorrect()   + " acc[i]="+ accuracy[i]);
-					System.out.println("fm="+ clp.result.fMeasure(1)+ " fm[i]="+ fmeasure[i]);
-					System.out.println("auc="+ 0.0+   " auc[i]="+ clp.result.areaUnderROC(1));
+			
 					
 					//@ Un comment to see the evalauation results
-					//System.out.println(clp.result.toSummaryString());					
+					//System.out.println(clp.result.toSummaryString());				
 					
-					//pred_10_db.appendElements(clp.result.predictions());			
+						
 				}
-		
-			
-			  // clp.avg_10_db_metrics_and_insert(classifier_name, pred_10_db, clp.conn);
+					  
 			   clp.compute_avg_stdev_and_insert(classifier_name, precision, recall, accuracy, fmeasure , roc_auc );
 		}		
 		
