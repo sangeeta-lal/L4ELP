@@ -59,7 +59,7 @@ public class cross_log_pred_CATCH_simple
 	 String result_table = "cross_log_pred_catch_simple";
 	
 	
-	int iterations=2;
+	int iterations=10;
 	String source_project="tomcat";
 	String target_project = "cloudstack";
 	//String target_project="hd";
