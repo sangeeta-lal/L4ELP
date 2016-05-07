@@ -34,10 +34,10 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
 
 /*
  * @Author: Sangeeta
- * 1. This is the simple log prediction code that is used to predict cross project log prediction using simple LogOpt method
- * 2. In this code we use  "TWO SOURCE PROJECTS" for training
+ * 1. This is the simple log prediction code within a project
+ * 2. Here we just want to compare whether we the accuracy of with-in project log prediction is higher or not.
  * */
-public class cross_two_source_proj_log_pred_CATCH_simple_delete
+public class within_log_pred_CATCH_delete
 {
 
 	/*
@@ -57,32 +57,29 @@ public class cross_two_source_proj_log_pred_CATCH_simple_delete
 	String driver = "com.mysql.jdbc.Driver";
 	//*/
 	 String db_name ="logging4_elp";
-	 String result_table = "cross_two_source_proj_log_pred_catch_simple";
+	 String result_table = "within_log_pred_catch";
 	
 	
-	String source_project="tomcat_cloudstack";
-	String target_project="hd";
+	//String source_project="tomcat";	
+	String source_project="cloudstack";	
+	//String source_project="hd";
 	
-	//String source_project="cloudstack_hd";
-	//String target_project = "tomcat";
-
+	//String source_file_path = path+"L4ELP\\dataset\\"+source_project+"-arff\\catch\\complete\\"+source_project+"_catch_complete.arff";		
+	String source_file_path = path+"L4ELP\\dataset\\"+source_project+"-arff\\catch\\balance\\"+source_project+"_catch_balance";
 	
-	//String source_project="tomcat_hd";
-	//String target_project="cloudstack";
-	
-	String source_file_path = path+"L4ELP\\dataset\\two-project-arff\\catch\\"+source_project+"_catch_complete.arff";		
-	String target_file_path = path+"L4ELP\\dataset\\"+target_project+"-arff\\catch\\balance\\"+target_project+"_catch_balance";
-	
-	DataSource trainsource;
-	DataSource testsource;
+	//DataSource trainsource;
+	DataSource all_data_source;
+	Instances all_data;
+		
 	Instances trains;
 	Instances tests;
 	Evaluation result;
 	
 	int instance_count_source = 0;
-	int instance_count_target =0;
+
 	Connection conn=null;	
     java.sql.Statement stmt = null;
+	
    
 	
 // This function uses dataset from the ARFF files
@@ -91,21 +88,14 @@ public void read_file(int i)
 	try 
 		{
 		
-		    //System.out.println(source_file_path);
+			all_data_source = new DataSource(source_file_path+"_"+i+".arff");
+			all_data = all_data_source.getDataSet();
+			all_data.setClassIndex(0);	
 			
-		    trainsource = new DataSource(source_file_path);
-			trains = trainsource.getDataSet();
-			trains.setClassIndex(0);
+			instance_count_source = all_data.numInstances();
 			
-			testsource = new DataSource(target_file_path+"_"+i+".arff");
-			tests = testsource.getDataSet();
 			
-			tests.setClassIndex(0);
-			
-			instance_count_source = trains.numInstances();
-			instance_count_target = tests.numInstances();
-			
-			System.out.println("Instance count source ="+ instance_count_source + "  Instance count target="+ instance_count_target);
+			System.out.println("Instance count source ="+ instance_count_source);// + "  Instance count target="+ instance_count_target);
 	    
 		} catch (Exception e) 
 		{
@@ -123,33 +113,21 @@ public void pre_process_data()
 	  try
 	    {
 		 
-		  
-		  //1. TF-IDF
+		   //1. TF-IDF
 		  StringToWordVector tfidf_filter = new StringToWordVector();
 		  tfidf_filter.setIDFTransform(true);
-		  tfidf_filter.setInputFormat(trains);
-     	  trains = Filter.useFilter(trains, tfidf_filter);     	  
-     	
-     	  tests = Filter.useFilter(tests, tfidf_filter);
-	  
-	      
+		  tfidf_filter.setInputFormat(all_data);
+     	  all_data = Filter.useFilter(all_data, tfidf_filter);     	  
 
  	     //2. Standarize  (not normalize because normalization is affected by outliers very easily)   	  
      	  Standardize  std_filter =  new Standardize();
-     	  std_filter.setInputFormat(trains);
-     	  trains= Filter.useFilter(trains,std_filter);     	  
-     	 
-     	  tests= Filter.useFilter(tests,std_filter);  	  
-	      
-
+     	  std_filter.setInputFormat(all_data);
+     	  all_data= Filter.useFilter(all_data,std_filter);     	  
+     	
  	     //3. Discretizations
      	  Discretize dfilter = new Discretize();
-	      dfilter.setInputFormat(trains);
-	      trains = Filter.useFilter(trains, dfilter);
-	      
-	      tests = Filter.useFilter(tests, dfilter);	      
-	      
-	
+	      dfilter.setInputFormat(all_data);
+	      all_data = Filter.useFilter(all_data, dfilter);
 	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -158,7 +136,16 @@ public void pre_process_data()
 
 }
 	
+// This method will divide the data in =to two parts: Train and Test
+public void create_train_and_test_split(double train_size, double test_size) 
+{
+	all_data.randomize(new java.util.Random(0));
+	int trainSize = (int) Math.round(all_data.numInstances() * train_size);
+	int testSize = all_data.numInstances() - trainSize;
+	trains = new Instances(all_data, 0, trainSize);
+	tests = new Instances(all_data, trainSize, testSize);
 
+}
 
 // This function is used to train and test a using a given classifier
 public Evaluation cross_pred(Classifier model) 
@@ -203,20 +190,20 @@ public void avg_10_db_metrics_and_insert(String classifier_name, FastVector pred
 	
 	util4_met  ut = new util4_met();
 	
-	avg_precision = ut.compute_precision(pred_10_db);
-	avg_recall = ut.compute_recall(pred_10_db);
-	avg_fmeasure = ut.compute_fmeasure(pred_10_db);
-	avg_accuracy =  ut.compute_accuracy(pred_10_db);
+	avg_precision =  ut.compute_precision(pred_10_db);
+	avg_recall =     ut.compute_recall(pred_10_db);
+	avg_fmeasure =   ut.compute_fmeasure(pred_10_db);
+	avg_accuracy =   ut.compute_accuracy(pred_10_db);
 	
 	// Round all the values to two decimal places
-		avg_precision =  Math.round(avg_precision * 100.0) / 100.0;
-		avg_recall =     Math.round(avg_recall * 100.0) / 100.0;
-		avg_fmeasure =   Math.round(avg_fmeasure * 100.0) / 100.0;
-		avg_accuracy =   Math.round(avg_accuracy * 100.0) / 100.0;
+	avg_precision =  Math.round(avg_precision * 100.0) / 100.0;
+	avg_recall =     Math.round(avg_recall * 100.0) / 100.0;
+	avg_fmeasure =   Math.round(avg_fmeasure * 100.0) / 100.0;
+	avg_accuracy =   Math.round(avg_accuracy * 100.0) / 100.0;
 		
     System.out.println("model ="+classifier_name +"   Acc = "+ avg_accuracy + "  size="+ pred_10_db.size());
 	
-	String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ target_project+"','"+ classifier_name+"',"+ trains.numInstances() + ","+ tests.numInstances()+","
+	String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"', 'same_as_source','"+ classifier_name+"',"+ trains.numInstances() + ","+ tests.numInstances()+","
 	                       + 10+","+avg_precision+","+ avg_recall+","+avg_fmeasure+","+ avg_accuracy +" )";
 	
 	
@@ -287,7 +274,7 @@ public static void main(String args[])
 			  					new NaiveBayes()};
 			  					//new MultilayerPerceptron()}; //removed because of high computational requirement
 	 
-		cross_two_source_proj_log_pred_CATCH_simple_delete clp = new cross_two_source_proj_log_pred_CATCH_simple_delete();
+		within_log_pred_CATCH_delete clp = new within_log_pred_CATCH_delete();
 		clp.conn = clp.initdb(clp.db_name);
 
 		if(clp.conn==null)
@@ -305,6 +292,8 @@ public static void main(String args[])
 				{
 					clp.read_file(i+1);
 					clp.pre_process_data();
+					clp.create_train_and_test_split(0.7,0.3);
+					
 					clp.result = clp.cross_pred(models[j]);
 					pred_10_db.appendElements(clp.result.predictions());
 					
@@ -319,6 +308,9 @@ public static void main(String args[])
 		
 		
 	}
+
+
+
 
 	
 }

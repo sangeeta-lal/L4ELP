@@ -34,8 +34,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
 
 /*
  * @Author: Sangeeta
- * 1. This is the simple log prediction code within a project
- * 2. Here we just want to compare whether we the accuracy of with-in project log prediction is higher or not.
+ * 1. This is the simple log prediction code that is used to predict cross project log prediction using simple LogOpt method
  * */
 public class within_log_pred_CATCH
 {
@@ -58,85 +57,89 @@ public class within_log_pred_CATCH
 	//*/
 	 String db_name ="logging4_elp";
 	 String result_table = "within_log_pred_catch";
-	
-	
+
+
+	int iterations=10;	
+
 	//String source_project="tomcat";	
 	String source_project="cloudstack";	
 	//String source_project="hd";
-	
-	//String source_file_path = path+"L4ELP\\dataset\\"+source_project+"-arff\\catch\\complete\\"+source_project+"_catch_complete.arff";		
-	String source_file_path = path+"L4ELP\\dataset\\"+source_project+"-arff\\catch\\balance\\"+source_project+"_catch_balance";
-	
+		
+	// we are using balanced files for with-in project logging prediction		
+   	String source_file_path = path+"L4ELP\\dataset\\"+source_project+"-arff\\catch\\balance\\"+source_project+"_catch_balance";
+		
 	//DataSource trainsource;
 	DataSource all_data_source;
 	Instances all_data;
-		
+			
 	Instances trains;
 	Instances tests;
 	Evaluation result;
-	
+		
 	int instance_count_source = 0;
+	 
 
 	Connection conn=null;	
-    java.sql.Statement stmt = null;
-	
+	java.sql.Statement stmt = null;
    
 	
-// This function uses dataset from the ARFF files
-public void read_file(int i)
- { 
-	try 
-		{
-		
-			all_data_source = new DataSource(source_file_path+"_"+i+".arff");
-			all_data = all_data_source.getDataSet();
-			all_data.setClassIndex(0);	
+	
+	// This function uses dataset from the ARFF files
+	public void read_file(int i)
+	 { 
+		try 
+			{
 			
-			instance_count_source = all_data.numInstances();
+				all_data_source = new DataSource(source_file_path+"_"+i+".arff");
+				all_data = all_data_source.getDataSet();
+				all_data.setClassIndex(0);	
+				
+				instance_count_source = all_data.numInstances();
+				
+				
+				System.out.println("Instance count source ="+ instance_count_source);// + "  Instance count target="+ instance_count_target);
+		    
+			} catch (Exception e) 
+			{
 			
+				e.printStackTrace();
+			}	  
 			
-			System.out.println("Instance count source ="+ instance_count_source);// + "  Instance count target="+ instance_count_target);
-	    
-		} catch (Exception e) 
-		{
-		
-			e.printStackTrace();
-		}	  
-		
-	}
+		}	
 	
 
 // This function is used to pre-process the dataset
 public void pre_process_data()
-{
-	
-	  try
-	    {
-		 
-		   //1. TF-IDF
-		  StringToWordVector tfidf_filter = new StringToWordVector();
-		  tfidf_filter.setIDFTransform(true);
-		  tfidf_filter.setInputFormat(all_data);
-     	  all_data = Filter.useFilter(all_data, tfidf_filter);     	  
+	{
+		
+		  try
+		    {
+			 
+			   //1. TF-IDF
+			  StringToWordVector tfidf_filter = new StringToWordVector();
+			  tfidf_filter.setIDFTransform(true);
+			  tfidf_filter.setInputFormat(all_data);
+	     	  all_data = Filter.useFilter(all_data, tfidf_filter);     	  
 
- 	     //2. Standarize  (not normalize because normalization is affected by outliers very easily)   	  
-     	  Standardize  std_filter =  new Standardize();
-     	  std_filter.setInputFormat(all_data);
-     	  all_data= Filter.useFilter(all_data,std_filter);     	  
-     	
- 	     //3. Discretizations
-     	  Discretize dfilter = new Discretize();
-	      dfilter.setInputFormat(all_data);
-	      all_data = Filter.useFilter(all_data, dfilter);
-	
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	 	     //2. Standarize  (not normalize because normalization is affected by outliers very easily)   	  
+	     	  Standardize  std_filter =  new Standardize();
+	     	  std_filter.setInputFormat(all_data);
+	     	  all_data= Filter.useFilter(all_data,std_filter);     	  
+	     	
+	 	     //3. Discretizations
+	     	  Discretize dfilter = new Discretize();
+		      dfilter.setInputFormat(all_data);
+		      all_data = Filter.useFilter(all_data, dfilter);
+		
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 }
 	
-// This method will divide the data in =to two parts: Train and Test
+
+//This method will divide the data in =to two parts: Train and Test
 public void create_train_and_test_split(double train_size, double test_size) 
 {
 	all_data.randomize(new java.util.Random(0));
@@ -146,6 +149,7 @@ public void create_train_and_test_split(double train_size, double test_size)
 	tests = new Instances(all_data, trainSize, testSize);
 
 }
+
 
 // This function is used to train and test a using a given classifier
 public Evaluation cross_pred(Classifier model) 
@@ -169,54 +173,6 @@ public Evaluation cross_pred(Classifier model)
 	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
 }
 
-// This method computes the results of classifier
-public void avg_10_db_metrics_and_insert(String classifier_name, FastVector pred_10_db, Connection conn)
-{
-	 // computes following metrics:
-	/*
-	 * 1. Precision
-	 * 2. Recall
-	 * 3. Accuracy
-	 * 4. F measure
-	 * 5. ROC 
-	 * */
-
-	double avg_precision = 0.0;
-	double avg_recall = 0.0;
-	double avg_accuracy = 0.0;
-	double avg_fmeasure = 0.0;	
-	double roc = 0.0;
-	double total_instances = 0.0;
-	
-	util4_met  ut = new util4_met();
-	
-	avg_precision =  ut.compute_precision(pred_10_db);
-	avg_recall =     ut.compute_recall(pred_10_db);
-	avg_fmeasure =   ut.compute_fmeasure(pred_10_db);
-	avg_accuracy =   ut.compute_accuracy(pred_10_db);
-	
-	// Round all the values to two decimal places
-	avg_precision =  Math.round(avg_precision * 100.0) / 100.0;
-	avg_recall =     Math.round(avg_recall * 100.0) / 100.0;
-	avg_fmeasure =   Math.round(avg_fmeasure * 100.0) / 100.0;
-	avg_accuracy =   Math.round(avg_accuracy * 100.0) / 100.0;
-		
-    System.out.println("model ="+classifier_name +"   Acc = "+ avg_accuracy + "  size="+ pred_10_db.size());
-	
-	String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"', 'same_as_source','"+ classifier_name+"',"+ trains.numInstances() + ","+ tests.numInstances()+","
-	                       + 10+","+avg_precision+","+ avg_recall+","+avg_fmeasure+","+ avg_accuracy +" )";
-	
-	
-	try 
-	{
-		stmt = conn.createStatement();
-		stmt.executeUpdate(insert_str);
-	} catch (SQLException e) {
-		
-		e.printStackTrace();
-	}
-	
-}
 
 public Connection initdb(String db_name)
 {
@@ -234,6 +190,73 @@ public Connection initdb(String db_name)
 		      e.printStackTrace();
 		 }
 		return conn;
+}
+
+
+// This method computes the average value  and std. deviation and inserts them in a db
+public void compute_avg_stdev_and_insert(String classifier_name, double[] precision, double[] recall, double[] accuracy, double[] fmeasure, double[] roc_auc) 
+{
+
+	 // computes following metrics:
+		/*
+		 * 1. Precision
+		 * 2. Recall
+		 * 3. Accuracy
+		 * 4. F measure
+		 * 5. ROC-AUC
+		 * */
+
+		double avg_precision = 0.0;
+		double avg_recall = 0.0;
+		double avg_accuracy = 0.0;
+		double avg_fmeasure = 0.0;	
+		double avg_roc_auc = 0.0;
+		
+		double std_precision = 0.0;
+		double std_recall = 0.0;
+		double std_accuracy = 0.0;
+		double std_fmeasure = 0.0;	
+		double std_roc_auc = 0.0;
+		//double total_instances = 0.0;
+		
+		util4_met  ut = new util4_met();
+		
+		avg_precision   = ut.compute_mean(precision);
+		avg_recall      = ut.compute_mean(recall);
+		avg_fmeasure    = ut.compute_mean(fmeasure);
+		avg_accuracy    = ut.compute_mean(accuracy);
+		avg_roc_auc     = ut.compute_mean(roc_auc);
+		
+		std_precision   = ut.compute_stddev(precision);
+		std_recall      = ut.compute_stddev(recall);
+		std_fmeasure    = ut.compute_stddev(fmeasure);
+		std_accuracy    = ut.compute_stddev(accuracy);
+		std_roc_auc     = ut.compute_stddev(roc_auc);
+		
+			
+	   // System.out.println("model ="+classifier_name +"   Acc = "+ avg_accuracy + "  size="+ pred_10_db.size());
+		
+		String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ "same_as_source" +"','"+ classifier_name+"',"+ trains.numInstances() + ","+ tests.numInstances()+","
+		                       + iterations+","+trains.numAttributes() +","+avg_precision+","+ std_precision+","+ avg_recall+","+ std_recall+","+avg_fmeasure+","+std_fmeasure+","+ avg_accuracy 
+		                       +","+std_accuracy+","+ avg_roc_auc+","+ std_roc_auc+" )";
+		System.out.println("Inserting="+ insert_str);
+		
+		conn = initdb(db_name);
+		if(conn==null)
+		{
+			System.out.println(" Databasse connection is null");
+			
+		}
+		
+		try 
+		{
+			stmt = conn.createStatement();
+			stmt.executeUpdate(insert_str);
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+	
 }
 
 // This is the function created to store the files to help in debugging
@@ -275,42 +298,60 @@ public static void main(String args[])
 			  					//new MultilayerPerceptron()}; //removed because of high computational requirement
 	 
 		within_log_pred_CATCH clp = new within_log_pred_CATCH();
-		clp.conn = clp.initdb(clp.db_name);
-
-		if(clp.conn==null)
-		{
-			System.out.println(" Databasse connection is null");
-			
-		}
+		
 		
 		// Length of models
 		for(int j=0; j<models.length; j++)
 		{
-			FastVector pred_10_db = new FastVector();
+			
 			String classifier_name =  models[j].getClass().getSimpleName();
-			for(int i=0; i<10; i++)
-				{
-					clp.read_file(i+1);
+			
+			double precision[]   = new double[clp.iterations];
+			double recall[]      = new double[clp.iterations];
+			double accuracy[]    = new double[clp.iterations];
+			double fmeasure[]    = new double[clp.iterations];	
+			double roc_auc[]     = new double[clp.iterations];
+			
+			
+			for(int i=0; i<clp.iterations; i++)
+				 {
+				    clp.read_file(i+1);
+				   
 					clp.pre_process_data();
 					clp.create_train_and_test_split(0.7,0.3);
 					
-					clp.result = clp.cross_pred(models[j]);
-					pred_10_db.appendElements(clp.result.predictions());
+					clp.result = clp.cross_pred(models[j]);				
+					
+					precision[i]         =   clp.result.precision(1)*100;
+					recall[i]            =   clp.result.recall(1)*100;
+					accuracy[i]          =   clp.result.pctCorrect(); //not required to multiply by 100, it is already in percentage
+					fmeasure[i]          =   clp.result.fMeasure(1)*100;
+					roc_auc[i]           =   clp.result.areaUnderROC(1)*100;
+					
+					
+					 // Alternative way to compute all the metrics mannually
+				   /* util4_met ut_obj=  new util4_met();
+					FastVector pred_1_db = clp.result.predictions();
+					precision[i]         = ut_obj.compute_precision(pred_1_db);
+					recall[i]            = ut_obj.compute_recall(pred_1_db);
+					accuracy[i]          = ut_obj.compute_accuracy(pred_1_db);
+					fmeasure[i]          = ut_obj.compute_fmeasure(pred_1_db);
+					roc_auc[i]           = ut_obj.compute_roc_auc(pred_1_db);//*/
+			
 					
 					//@ Un comment to see the evalauation results
-					//System.out.println(clp.result.toSummaryString());	
-				
+					//System.out.println(clp.result.toSummaryString());				
+					
+						
 				}
-		
-			
-			clp.avg_10_db_metrics_and_insert(classifier_name, pred_10_db, clp.conn);
+					  
+			   clp.compute_avg_stdev_and_insert(classifier_name, precision, recall, accuracy, fmeasure , roc_auc );
 		}		
 		
 		
 	}
 
-
-
-
 	
 }
+
+
