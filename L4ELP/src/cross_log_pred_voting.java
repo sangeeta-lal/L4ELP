@@ -26,7 +26,7 @@ import weka.filters.unsupervised.attribute.Standardize;
 import weka.filters.unsupervised.attribute.StringToWordVector;
 
 // This file will be used to ensemble based prediction using stacking of algorithms
-public class cross_log_pred_stacking
+public class cross_log_pred_voting
 {
 
 
@@ -48,7 +48,7 @@ String url = "jdbc:mysql://localhost:3306/";
 String driver = "com.mysql.jdbc.Driver";
 //*/
 String db_name ="logging4_elp";
-String result_table = "test_stacking";
+String result_table = "test_voting";
 
 
 int iterations=10;
@@ -155,7 +155,7 @@ public void pre_process_data()
 public Evaluation cross_pred_stacking() 
 {
 	
-	  Classifier[] cfsArray = new Classifier[4]; 
+	  Classifier[] cfsArray = new Classifier[2]; 
 	  BayesNet cfs1= new BayesNet();
 	  ADTree cfs2= new ADTree();
 	  DecisionTable cfs3= new DecisionTable();
@@ -167,15 +167,13 @@ public Evaluation cross_pred_stacking()
 	  cfsArray[3]=cfs4;
 
 	  
-	  //BayesNet cfsm=new BayesNet();
-	  Logistic cfsm =  new Logistic();
+	  BayesNet cfsm=new BayesNet();
 	  
 	  Stacking stack_model= new Stacking();
 	  stack_model.setClassifiers(cfsArray);
 	  stack_model.setMetaClassifier(cfsm);
 	  stack_model.setSeed(1);
 	 
-	  System.out.println("here");
 	
 	
      Evaluation evaluation = null;
@@ -312,7 +310,7 @@ public void save_file_temp_location(Instances trains2, Instances tests2)
 public static void main(String args[])
 {	  	
 
-	  cross_log_pred_stacking clps =  new cross_log_pred_stacking();
+	  cross_log_pred_voting clps =  new cross_log_pred_voting();
 	
 	  double precision[]   = new double[clps.iterations];
 	  double recall[]      = new double[clps.iterations];
