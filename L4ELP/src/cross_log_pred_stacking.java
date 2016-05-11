@@ -51,7 +51,7 @@ String db_name ="logging4_elp";
 String result_table = "test_stacking";
 
 
-int iterations=10;
+int iterations=1;
 String source_project="tomcat";
 String target_project = "cloudstack";
 //String target_project="hd";

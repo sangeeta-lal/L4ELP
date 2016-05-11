@@ -13,6 +13,7 @@ import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.functions.RBFNetwork;
 import weka.classifiers.meta.AdaBoostM1;
 import weka.classifiers.meta.Stacking;
+import weka.classifiers.meta.Vote;
 import weka.classifiers.rules.DecisionTable;
 import weka.classifiers.trees.ADTree;
 import weka.classifiers.trees.J48;
@@ -51,7 +52,7 @@ String db_name ="logging4_elp";
 String result_table = "test_voting";
 
 
-int iterations=10;
+int iterations=1;
 String source_project="tomcat";
 String target_project = "cloudstack";
 //String target_project="hd";
@@ -155,7 +156,7 @@ public void pre_process_data()
 public Evaluation cross_pred_stacking() 
 {
 	
-	  Classifier[] cfsArray = new Classifier[2]; 
+	  Classifier[] cfsArray = new Classifier[4]; 
 	  BayesNet cfs1= new BayesNet();
 	  ADTree cfs2= new ADTree();
 	  DecisionTable cfs3= new DecisionTable();
@@ -167,12 +168,12 @@ public Evaluation cross_pred_stacking()
 	  cfsArray[3]=cfs4;
 
 	  
-	  BayesNet cfsm=new BayesNet();
-	  
-	  Stacking stack_model= new Stacking();
-	  stack_model.setClassifiers(cfsArray);
-	  stack_model.setMetaClassifier(cfsm);
-	  stack_model.setSeed(1);
+	  Vote voter =  new Vote();
+	   
+	 
+	  voter.setClassifiers(cfsArray);
+	 
+	 
 	 
 	
 	
@@ -182,10 +183,12 @@ public Evaluation cross_pred_stacking()
     {
      
     		
-        stack_model.buildClassifier(trains);
-    	evaluation= new Evaluation(trains);	
-    	evaluation.evaluateModel(stack_model, tests);
-
+        voter.buildClassifier(trains);
+    	evaluation= new Evaluation(trains);
+    	System.out.println("h1");
+    	evaluation.evaluateModel(voter, tests);
+       
+    	System.out.println("h2");
 
     } catch (Exception e) 
     {
@@ -338,7 +341,7 @@ public static void main(String args[])
 					
 			}
 				  
-		   clps.compute_avg_stdev_and_insert("stacking", precision, recall, accuracy, fmeasure , roc_auc );
+		   clps.compute_avg_stdev_and_insert("voting", precision, recall, accuracy, fmeasure , roc_auc );
     
      }//main	
 	
