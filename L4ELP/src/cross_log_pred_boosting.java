@@ -163,13 +163,9 @@ public Evaluation cross_pred_boosting_naive_bayes()
 	
 	AdaBoostM1  m1 =  new AdaBoostM1();
     m1.setClassifier(new NaiveBayes());
-    m1.setNumIterations(20);
-    ;
-	  
-	  
-	
-	
-     Evaluation evaluation = null;
+    m1.setNumIterations(20); 
+
+    Evaluation evaluation = null;
 
     try
     {
@@ -193,6 +189,203 @@ return evaluation;
 
 }
 
+//This function is used to train and test a using a given classifier
+public Evaluation cross_pred_boosting_bayes_net() 
+{
+	
+	
+	AdaBoostM1  m1 =  new AdaBoostM1();
+  m1.setClassifier(new BayesNet());
+  m1.setNumIterations(20); 
+
+  Evaluation evaluation = null;
+
+  try
+  {
+   
+  		
+      m1.buildClassifier(trains);
+  	evaluation= new Evaluation(trains);
+  	System.out.println("h1");
+  	evaluation.evaluateModel(m1, tests);
+     
+  	System.out.println("h2");
+
+  } catch (Exception e) 
+  {
+
+	e.printStackTrace();
+  }
+
+return evaluation;
+
+}
+
+
+//This function is used to train and test a using a given classifier
+public Evaluation cross_pred_boosting_j48() 
+{
+	
+	
+AdaBoostM1  m1 =  new AdaBoostM1();
+m1.setClassifier(new J48());
+m1.setNumIterations(20); 
+
+Evaluation evaluation = null;
+
+try
+{
+ 
+		
+    m1.buildClassifier(trains);
+	evaluation= new Evaluation(trains);
+	System.out.println("h1");
+	evaluation.evaluateModel(m1, tests);
+   
+	System.out.println("h2");
+
+} catch (Exception e) 
+{
+
+	e.printStackTrace();
+}
+
+return evaluation;
+
+}
+
+
+//This function is used to train and test a using a given classifier
+public Evaluation cross_pred_boosting_logistic() 
+{
+	
+	
+AdaBoostM1  m1 =  new AdaBoostM1();
+m1.setClassifier(new Logistic());
+m1.setNumIterations(20); 
+
+Evaluation evaluation = null;
+
+try
+{
+
+		
+  m1.buildClassifier(trains);
+	evaluation= new Evaluation(trains);
+	System.out.println("h1");
+	evaluation.evaluateModel(m1, tests);
+ 
+	System.out.println("h2");
+
+} catch (Exception e) 
+{
+
+	e.printStackTrace();
+}
+
+return evaluation;
+
+
+}
+
+//This function is used to train and test a using a given classifier
+public Evaluation cross_pred_boosting_adtree() 
+{
+	
+	
+AdaBoostM1  m1 =  new AdaBoostM1();
+m1.setClassifier(new ADTree());
+m1.setNumIterations(20); 
+
+Evaluation evaluation = null;
+
+try
+{
+
+		
+m1.buildClassifier(trains);
+	evaluation= new Evaluation(trains);
+	System.out.println("h1");
+	evaluation.evaluateModel(m1, tests);
+
+	System.out.println("h2");
+
+} catch (Exception e) 
+{
+
+	e.printStackTrace();
+}
+
+return evaluation;
+
+}
+
+
+//This function is used to train and test a using a given classifier
+public Evaluation cross_pred_boosting_decision_table() 
+{
+	
+	
+AdaBoostM1  m1 =  new AdaBoostM1();
+m1.setClassifier(new DecisionTable());
+m1.setNumIterations(20); 
+
+Evaluation evaluation = null;
+
+try
+{
+
+		
+m1.buildClassifier(trains);
+	evaluation= new Evaluation(trains);
+	System.out.println("h1");
+	evaluation.evaluateModel(m1, tests);
+
+	System.out.println("h2");
+
+} catch (Exception e) 
+{
+
+	e.printStackTrace();
+}
+
+return evaluation;
+
+}
+
+
+//This function is used to train and test a using a given classifier
+public Evaluation cross_pred_boosting_random_forst() 
+{
+	
+	
+AdaBoostM1  m1 =  new AdaBoostM1();
+m1.setClassifier(new RandomForest());
+m1.setNumIterations(20); 
+
+Evaluation evaluation = null;
+
+try
+{
+
+		
+m1.buildClassifier(trains);
+	evaluation= new Evaluation(trains);
+	System.out.println("h1");
+	evaluation.evaluateModel(m1, tests);
+
+	System.out.println("h2");
+
+} catch (Exception e) 
+{
+
+	e.printStackTrace();
+}
+
+return evaluation;
+
+}
+			  					
 
 public Connection initdb(String db_name)
 {
@@ -314,27 +507,145 @@ public static void main(String args[])
 	  double roc_auc[]     = new double[clps.iterations];
 		
 	  
-	  // Boosting Bayes Net		
+	  	//\\=========== Boosting ADTree =================================//\\	
 		for(int i=0; i<clps.iterations; i++)
-			 {
-			    clps.read_file(i+1);
-			   
-				clps.pre_process_data();
-				clps.result = clps.cross_pred_boosting_naive_bayes();				
+		 {
+				    clps.read_file(i+1);
+				   
+					clps.pre_process_data();
+					clps.result = clps.cross_pred_boosting_adtree();				
+					
+					precision[i]         =   clps.result.precision(1)*100;
+					recall[i]            =   clps.result.recall(1)*100;
+					accuracy[i]          =   clps.result.pctCorrect(); //not required to multiply by 100, it is already in percentage
+					fmeasure[i]          =   clps.result.fMeasure(1)*100;
+					roc_auc[i]           =   clps.result.areaUnderROC(1)*100;		
 				
-				precision[i]         =   clps.result.precision(1)*100;
-				recall[i]            =   clps.result.recall(1)*100;
-				accuracy[i]          =   clps.result.pctCorrect(); //not required to multiply by 100, it is already in percentage
-				fmeasure[i]          =   clps.result.fMeasure(1)*100;
-				roc_auc[i]           =   clps.result.areaUnderROC(1)*100;		
+					//@ Un comment to see the evalauation results
+					//System.out.println(clp.result.toSummaryString());				
+					
+						
+			}
+					  
+			   clps.compute_avg_stdev_and_insert("ADTree Boosting", precision, recall, accuracy, fmeasure , roc_auc );
+	  
+	  
+			 //\\=========== Decision table=================================//\\			
+				for(int i=0; i<clps.iterations; i++)
+					 {
+					    clps.read_file(i+1);
+					   
+						clps.pre_process_data();
+						clps.result = clps.cross_pred_boosting_decision_table();				
+						
+						precision[i]         =   clps.result.precision(1)*100;
+						recall[i]            =   clps.result.recall(1)*100;
+						accuracy[i]          =   clps.result.pctCorrect(); //not required to multiply by 100, it is already in percentage
+						fmeasure[i]          =   clps.result.fMeasure(1)*100;
+						roc_auc[i]           =   clps.result.areaUnderROC(1)*100;		
+					
+						//@ Un comment to see the evalauation results
+						//System.out.println(clp.result.toSummaryString());				
+						
+							
+					}
+						  
+				   clps.compute_avg_stdev_and_insert("Decision Table Boosting", precision, recall, accuracy, fmeasure , roc_auc );
+		    		   
+			   
+
+					 //\\=========== J48 =================================//\\			
+						for(int i=0; i<clps.iterations; i++)
+							 {
+							    clps.read_file(i+1);
+							   
+								clps.pre_process_data();
+								clps.result = clps.cross_pred_boosting_j48();				
+								
+								precision[i]         =   clps.result.precision(1)*100;
+								recall[i]            =   clps.result.recall(1)*100;
+								accuracy[i]          =   clps.result.pctCorrect(); //not required to multiply by 100, it is already in percentage
+								fmeasure[i]          =   clps.result.fMeasure(1)*100;
+								roc_auc[i]           =   clps.result.areaUnderROC(1)*100;		
+							
+								//@ Un comment to see the evalauation results
+								//System.out.println(clp.result.toSummaryString());				
+								
+									
+							}
+								  
+						   clps.compute_avg_stdev_and_insert("J48 Boosting", precision, recall, accuracy, fmeasure , roc_auc );
+				    	
+						   
+						   //\\=========== Logistic =================================//\\			
+							for(int i=0; i<clps.iterations; i++)
+								 {
+								    clps.read_file(i+1);
+								   
+									clps.pre_process_data();
+									clps.result = clps.cross_pred_boosting_logistic();				
+									
+									precision[i]         =   clps.result.precision(1)*100;
+									recall[i]            =   clps.result.recall(1)*100;
+									accuracy[i]          =   clps.result.pctCorrect(); //not required to multiply by 100, it is already in percentage
+									fmeasure[i]          =   clps.result.fMeasure(1)*100;
+									roc_auc[i]           =   clps.result.areaUnderROC(1)*100;		
+								
+									//@ Un comment to see the evalauation results
+									//System.out.println(clp.result.toSummaryString());				
+									
+										
+								}
+									  
+							   clps.compute_avg_stdev_and_insert("Logistic Boosting", precision, recall, accuracy, fmeasure , roc_auc );
+					    		  			   
+					      
+							   //\\=========== Naive Bayes =================================//\\			
+								for(int i=0; i<clps.iterations; i++)
+									 {
+									    clps.read_file(i+1);
+									   
+										clps.pre_process_data();
+										clps.result = clps.cross_pred_boosting_naive_bayes();				
+										
+										precision[i]         =   clps.result.precision(1)*100;
+										recall[i]            =   clps.result.recall(1)*100;
+										accuracy[i]          =   clps.result.pctCorrect(); //not required to multiply by 100, it is already in percentage
+										fmeasure[i]          =   clps.result.fMeasure(1)*100;
+										roc_auc[i]           =   clps.result.areaUnderROC(1)*100;		
+									
+										//@ Un comment to see the evalauation results
+										//System.out.println(clp.result.toSummaryString());				
+										
+											
+									}
+										  
+								   clps.compute_avg_stdev_and_insert("Naive Bayes Boosting", precision, recall, accuracy, fmeasure , roc_auc );
+						    		  			   
+						      
+			   
+			   
+								   //\\=========== BayesNet=================================//\\			
+								   for(int i=0; i<clps.iterations; i++)
+								   {
+									   clps.read_file(i+1);
+			   
+									   clps.pre_process_data();
+									   clps.result = clps.cross_pred_boosting_bayes_net();				
+				
+									   precision[i]         =   clps.result.precision(1)*100;
+									   recall[i]            =   clps.result.recall(1)*100;
+									   accuracy[i]          =   clps.result.pctCorrect(); //not required to multiply by 100, it is already in percentage
+									   fmeasure[i]          =   clps.result.fMeasure(1)*100;
+									   roc_auc[i]           =   clps.result.areaUnderROC(1)*100;		
 			
-				//@ Un comment to see the evalauation results
-				//System.out.println(clp.result.toSummaryString());				
+									   //@ Un comment to see the evalauation results
+									   //System.out.println(clp.result.toSummaryString());				
 				
 					
-			}
+								   }
 				  
-		   clps.compute_avg_stdev_and_insert("Naive Bayes Boosting", precision, recall, accuracy, fmeasure , roc_auc );
+								   clps.compute_avg_stdev_and_insert("Bayes Net Boosting", precision, recall, accuracy, fmeasure , roc_auc );
     
      }//main	
 	
