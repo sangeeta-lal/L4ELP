@@ -27,7 +27,7 @@ import weka.filters.unsupervised.attribute.Standardize;
 import weka.filters.unsupervised.attribute.StringToWordVector;
 
 // This file will be used to ensemble based prediction using stacking of algorithms
-public class cross_log_pred_voting
+public class cross_log_pred_boosting
 {
 
 
@@ -48,9 +48,10 @@ String password = "1234";
 String url = "jdbc:mysql://localhost:3306/";
 String driver = "com.mysql.jdbc.Driver";
 //*/
-String db_name ="logging4_elp";
-String result_table = "test_voting";
 
+
+String type = "catch";
+//String type = "if";
 
 int iterations=1;
 String source_project="tomcat";
@@ -65,8 +66,11 @@ String target_project = "cloudstack";
 //String target_project = "tomcat";
 //String target_project="cloudstack";
 
-String source_file_path = path+"L4ELP\\dataset\\"+source_project+"-arff\\catch\\complete\\"+source_project+"_catch_complete.arff";		
-String target_file_path = path+"L4ELP\\dataset\\"+target_project+"-arff\\catch\\balance\\"+target_project+"_catch_balance";
+String db_name ="logging4_elp";
+String result_table = "cross_log_pred_boosting_"+type;
+
+String source_file_path = path+"L4ELP\\dataset\\"+source_project+"-arff\\"+type+"\\complete\\"+source_project+"_"+type+"_complete.arff";		
+String target_file_path = path+"L4ELP\\dataset\\"+target_project+"-arff\\"+type+"\\balance\\"+target_project+"_"+type+"_balance";
 
 DataSource trainsource;
 DataSource testsource;
@@ -153,26 +157,16 @@ public void pre_process_data()
 
 
 //This function is used to train and test a using a given classifier
-public Evaluation cross_pred_stacking() 
+public Evaluation cross_pred_boosting_naive_bayes() 
 {
 	
-	  Classifier[] cfsArray = new Classifier[2]; 
-	 // BayesNet cfs1= new BayesNet();
-	  ADTree cfs2= new ADTree();
-	  DecisionTable cfs3= new DecisionTable();
-	 // NaiveBayes cfs4  = new NaiveBayes();
+	
+	AdaBoostM1  m1 =  new AdaBoostM1();
+    m1.setClassifier(new NaiveBayes());
+    m1.setNumIterations(20);
+    ;
 	  
-	 // cfsArray[0]=cfs1;
-	  cfsArray[0]=cfs2;
-	  cfsArray[1]=cfs3;
-	 // cfsArray[3]=cfs4;
-
 	  
-	  Vote voter =  new Vote();
-	   
-	 
-	  voter.setClassifiers(cfsArray); 
-	 
 	
 	
      Evaluation evaluation = null;
@@ -181,10 +175,10 @@ public Evaluation cross_pred_stacking()
     {
      
     		
-        voter.buildClassifier(trains);
+        m1.buildClassifier(trains);
     	evaluation= new Evaluation(trains);
     	System.out.println("h1");
-    	evaluation.evaluateModel(voter, tests);
+    	evaluation.evaluateModel(m1, tests);
        
     	System.out.println("h2");
 
@@ -311,7 +305,7 @@ public void save_file_temp_location(Instances trains2, Instances tests2)
 public static void main(String args[])
 {	  	
 
-	  cross_log_pred_voting clps =  new cross_log_pred_voting();
+	  cross_log_pred_boosting clps =  new cross_log_pred_boosting();
 	
 	  double precision[]   = new double[clps.iterations];
 	  double recall[]      = new double[clps.iterations];
@@ -319,13 +313,14 @@ public static void main(String args[])
 	  double fmeasure[]    = new double[clps.iterations];	
 	  double roc_auc[]     = new double[clps.iterations];
 		
-		
+	  
+	  // Boosting Bayes Net		
 		for(int i=0; i<clps.iterations; i++)
 			 {
 			    clps.read_file(i+1);
 			   
 				clps.pre_process_data();
-				clps.result = clps.cross_pred_stacking();				
+				clps.result = clps.cross_pred_boosting_naive_bayes();				
 				
 				precision[i]         =   clps.result.precision(1)*100;
 				recall[i]            =   clps.result.recall(1)*100;
@@ -339,7 +334,7 @@ public static void main(String args[])
 					
 			}
 				  
-		   clps.compute_avg_stdev_and_insert("voting", precision, recall, accuracy, fmeasure , roc_auc );
+		   clps.compute_avg_stdev_and_insert("Naive Bayes Boosting", precision, recall, accuracy, fmeasure , roc_auc );
     
      }//main	
 	
