@@ -172,6 +172,7 @@ public Evaluation cross_pred_stacking()
 	   
 	 
 	  voter.setClassifiers(cfsArray); 
+	  voter.setCombinationRule(new SelectedTag(AVERAGE_RULE, TAGS_RULES));
 	 
 	
 	
