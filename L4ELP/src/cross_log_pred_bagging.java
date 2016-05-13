@@ -12,6 +12,7 @@ import weka.classifiers.functions.Logistic;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.functions.RBFNetwork;
 import weka.classifiers.meta.AdaBoostM1;
+import weka.classifiers.meta.Bagging;
 import weka.classifiers.meta.Stacking;
 import weka.classifiers.meta.Vote;
 import weka.classifiers.rules.DecisionTable;
@@ -27,7 +28,7 @@ import weka.filters.unsupervised.attribute.Standardize;
 import weka.filters.unsupervised.attribute.StringToWordVector;
 
 // This file will be used to ensemble based prediction using stacking of algorithms
-public class cross_log_pred_boosting
+public class cross_log_pred_bagging
 {
 
 
@@ -67,7 +68,7 @@ String target_project = "cloudstack";
 //String target_project="cloudstack";
 
 String db_name ="logging4_elp";
-String result_table = "cross_log_pred_boosting_"+type;
+String result_table = "cross_log_pred_bagging_"+type;
 
 String source_file_path = path+"L4ELP\\dataset\\"+source_project+"-arff\\"+type+"\\complete\\"+source_project+"_"+type+"_complete.arff";		
 String target_file_path = path+"L4ELP\\dataset\\"+target_project+"-arff\\"+type+"\\balance\\"+target_project+"_"+type+"_balance";
@@ -157,11 +158,11 @@ public void pre_process_data()
 
 
 //This function is used to train and test a using a given classifier
-public Evaluation cross_pred_boosting_naive_bayes() 
+public Evaluation cross_pred_bagging_naive_bayes() 
 {
 	
 	
-	AdaBoostM1  m1 =  new AdaBoostM1();
+	Bagging m1 =  new Bagging();
     m1.setClassifier(new NaiveBayes());
     m1.setNumIterations(10); 
 
@@ -190,11 +191,10 @@ return evaluation;
 }
 
 //This function is used to train and test a using a given classifier
-public Evaluation cross_pred_boosting_bayes_net() 
+public Evaluation cross_pred_bagging_bayes_net() 
 {
 	
-	
-	AdaBoostM1  m1 =  new AdaBoostM1();
+	Bagging m1 =  new Bagging();	
   m1.setClassifier(new BayesNet());
   m1.setNumIterations(10); 
 
@@ -223,11 +223,11 @@ return evaluation;
 
 
 //This function is used to train and test a using a given classifier
-public Evaluation cross_pred_boosting_j48() 
+public Evaluation cross_pred_bagging_j48() 
 {
 	
 	
-AdaBoostM1  m1 =  new AdaBoostM1();
+	Bagging m1 =  new Bagging();
 m1.setClassifier(new J48());
 m1.setNumIterations(10); 
 
@@ -256,11 +256,11 @@ return evaluation;
 
 
 //This function is used to train and test a using a given classifier
-public Evaluation cross_pred_boosting_logistic() 
+public Evaluation cross_pred_bagging_logistic() 
 {
 	
 	
-AdaBoostM1  m1 =  new AdaBoostM1();
+	Bagging m1 =  new Bagging();
 m1.setClassifier(new Logistic());
 m1.setNumIterations(10); 
 
@@ -289,11 +289,11 @@ return evaluation;
 }
 
 //This function is used to train and test a using a given classifier
-public Evaluation cross_pred_boosting_adtree() 
+public Evaluation cross_pred_bagging_adtree() 
 {
 	
 	
-AdaBoostM1  m1 =  new AdaBoostM1();
+	Bagging m1 =  new Bagging();
 m1.setClassifier(new ADTree());
 m1.setNumIterations(10); 
 
@@ -322,11 +322,11 @@ return evaluation;
 
 
 //This function is used to train and test a using a given classifier
-public Evaluation cross_pred_boosting_decision_table() 
+public Evaluation cross_pred_bagging_decision_table() 
 {
 	
 	
-AdaBoostM1  m1 =  new AdaBoostM1();
+	Bagging m1 =  new Bagging();
 m1.setClassifier(new DecisionTable());
 m1.setNumIterations(10); 
 
@@ -357,11 +357,11 @@ return evaluation;
 
 
 //This function is used to train and test a using a given classifier
-public Evaluation cross_pred_boosting_random_forest() 
+public Evaluation cross_pred_bagging_random_forest() 
 {
 	
 	
-AdaBoostM1  m1 =  new AdaBoostM1();
+Bagging m1 =  new Bagging();
 m1.setClassifier(new RandomForest());
 m1.setNumIterations(10); 
 
@@ -371,40 +371,7 @@ try
 {
 
 		
-m1.buildClassifier(trains);
-	evaluation= new Evaluation(trains);
-	System.out.println("h1");
-	evaluation.evaluateModel(m1, tests);
-
-	System.out.println("h2");
-
-} catch (Exception e) 
-{
-
-	e.printStackTrace();
-}
-
-return evaluation;
-
-}
-
-
-//This function is used to train and test a using a given classifier
-public Evaluation cross_pred_boosting_random_forst() 
-{
-	
-	
-AdaBoostM1  m1 =  new AdaBoostM1();
-m1.setClassifier(new RandomForest());
-m1.setNumIterations(10); 
-
-Evaluation evaluation = null;
-
-try
-{
-
-		
-m1.buildClassifier(trains);
+    m1.buildClassifier(trains);
 	evaluation= new Evaluation(trains);
 	System.out.println("h1");
 	evaluation.evaluateModel(m1, tests);
@@ -512,15 +479,15 @@ public void learn_and_insert_adtree(double[] precision, double[] recall,
 		double[] accuracy, double[] fmeasure, double[] roc_auc)
 {
 
-	System.out.println("Computing Boosting ADTree for:"+ type);
-  	//\\=========== Boosting ADTree =================================//\\	
+	System.out.println("Computing bagging ADTree for:"+ type);
+  	//\\=========== bagging ADTree =================================//\\	
 	for(int i=0; i<iterations; i++)
 	 {
 		       System.out.println("Iteration=" + i);
 			    read_file(i+1);
 			   
 				pre_process_data();
-				result = cross_pred_boosting_adtree();				
+				result = cross_pred_bagging_adtree();				
 				
 				precision[i]         =   result.precision(1)*100;
 				recall[i]            =   result.recall(1)*100;
@@ -534,7 +501,7 @@ public void learn_and_insert_adtree(double[] precision, double[] recall,
 					
 		}
 				  
-		   compute_avg_stdev_and_insert("ADTree Boosting", precision, recall, accuracy, fmeasure , roc_auc );
+		   compute_avg_stdev_and_insert("ADTree bagging", precision, recall, accuracy, fmeasure , roc_auc );
 	
 }
 
@@ -543,14 +510,14 @@ public void learn_and_insert_bayes_net(double[] precision, double[] recall,
 		double[] accuracy, double[] fmeasure, double[] roc_auc) 
 {
 
-	System.out.println("Computing Boosting Bayes Net for:"+ type);
+	System.out.println("Computing bagging Bayes Net for:"+ type);
 	//\\=========== BayesNet=================================//\\			
 	   for(int i=0; i<iterations; i++)
 	   {
 		   read_file(i+1);
 
 		   pre_process_data();
-		   result = cross_pred_boosting_bayes_net();				
+		   result = cross_pred_bagging_bayes_net();				
 
 		   precision[i]         =   result.precision(1)*100;
 		   recall[i]            =   result.recall(1)*100;
@@ -563,14 +530,14 @@ public void learn_and_insert_bayes_net(double[] precision, double[] recall,
 
 	   }
 
-	   compute_avg_stdev_and_insert("Bayes Net Boosting", precision, recall, accuracy, fmeasure , roc_auc );
+	   compute_avg_stdev_and_insert("Bayes Net bagging", precision, recall, accuracy, fmeasure , roc_auc );
 }
 
 
 public void learn_and_insert_naive_bayes(double[] precision, double[] recall,
 		double[] accuracy, double[] fmeasure, double[] roc_auc)
 {
-	System.out.println("Computing Boosting Naive Bayes for:"+ type);  
+	System.out.println("Computing Bagging Naive Bayes for:"+ type);  
 	
 	//\\=========== Naive Bayes =================================//\\			
 	for(int i=0; i<iterations; i++)
@@ -578,7 +545,7 @@ public void learn_and_insert_naive_bayes(double[] precision, double[] recall,
 		    read_file(i+1);
 		   
 			pre_process_data();
-			result = cross_pred_boosting_naive_bayes();				
+			result = cross_pred_bagging_naive_bayes();				
 			
 			precision[i]         =   result.precision(1)*100;
 			recall[i]            =   result.recall(1)*100;
@@ -592,7 +559,7 @@ public void learn_and_insert_naive_bayes(double[] precision, double[] recall,
 				
 		}
 			  
-	   compute_avg_stdev_and_insert("Naive Bayes Boosting", precision, recall, accuracy, fmeasure , roc_auc );
+	   compute_avg_stdev_and_insert("Naive Bayes Bagging", precision, recall, accuracy, fmeasure , roc_auc );
 		
 }
 
@@ -602,7 +569,7 @@ public void learn_and_insert_logistic(double[] precision, double[] recall,
 	   
 	
 
-	System.out.println("Computing Boosting Logistic for:"+ type);  
+	System.out.println("Computing bagging Logistic for:"+ type);  
 	
 	   //\\=========== Logistic =================================//\\			
 		for(int i=0; i<iterations; i++)
@@ -610,7 +577,7 @@ public void learn_and_insert_logistic(double[] precision, double[] recall,
 			    read_file(i+1);
 			   
 				pre_process_data();
-				result = cross_pred_boosting_logistic();				
+				result = cross_pred_bagging_logistic();				
 				
 				precision[i]         =   result.precision(1)*100;
 				recall[i]            =   result.recall(1)*100;
@@ -624,7 +591,7 @@ public void learn_and_insert_logistic(double[] precision, double[] recall,
 					
 			}
 				  
-		   compute_avg_stdev_and_insert("Logistic Boosting", precision, recall, accuracy, fmeasure , roc_auc );
+		   compute_avg_stdev_and_insert("Logistic bagging", precision, recall, accuracy, fmeasure , roc_auc );
  		  			   
 }
 
@@ -632,14 +599,14 @@ public void learn_and_insert_logistic(double[] precision, double[] recall,
 public void learn_and_insert_j48(double[] precision, double[] recall,
 		double[] accuracy, double[] fmeasure, double[] roc_auc) {
 	
-	System.out.println("Computing Boosting J48 for:"+ type);  
+	System.out.println("Computing bagging J48 for:"+ type);  
 	//\\=========== J48 =================================//\\			
 			for(int i=0; i<iterations; i++)
 				 {
 				    read_file(i+1);
 				   
 					pre_process_data();
-					result = cross_pred_boosting_j48();				
+					result = cross_pred_bagging_j48();				
 					
 					precision[i]         =   result.precision(1)*100;
 					recall[i]            =   result.recall(1)*100;
@@ -653,7 +620,7 @@ public void learn_and_insert_j48(double[] precision, double[] recall,
 						
 				}
 					  
-			   compute_avg_stdev_and_insert("J48 Boosting", precision, recall, accuracy, fmeasure , roc_auc );
+			   compute_avg_stdev_and_insert("J48 bagging", precision, recall, accuracy, fmeasure , roc_auc );
 	    
 }
 
@@ -661,7 +628,7 @@ public void learn_and_insert_j48(double[] precision, double[] recall,
 public void learn_and_insert_decision_table(double[] precision,
 		double[] recall, double[] accuracy, double[] fmeasure, double[] roc_auc) {
 
-	System.out.println("Computing Boosting Decision Table for:"+ type);  
+	System.out.println("Computing bagging Decision Table for:"+ type);  
 	
 	//\\=========== Decision table=================================//\\			
 		for(int i=0; i<iterations; i++)
@@ -669,7 +636,7 @@ public void learn_and_insert_decision_table(double[] precision,
 			    read_file(i+1);
 			   
 				pre_process_data();
-				result = cross_pred_boosting_decision_table();				
+				result = cross_pred_bagging_decision_table();				
 				
 				precision[i]         =   result.precision(1)*100;
 				recall[i]            =   result.recall(1)*100;
@@ -682,7 +649,7 @@ public void learn_and_insert_decision_table(double[] precision,
 					
 			}
 				  
-		   compute_avg_stdev_and_insert("Decision Table Boosting", precision, recall, accuracy, fmeasure , roc_auc );
+		   compute_avg_stdev_and_insert("Decision Table bagging", precision, recall, accuracy, fmeasure , roc_auc );
    		   
 }
 
@@ -691,7 +658,7 @@ public void learn_and_insert_decision_table(double[] precision,
 private void learn_and_insert_random_forest(double[] precision,
 		double[] recall, double[] accuracy, double[] fmeasure, double[] roc_auc) 
 {
-System.out.println("Computing Boosting Random Forest for:"+ type);  
+System.out.println("Computing Bagging Random Forest for:"+ type);  
 	
 	//\\=========== Decision table=================================//\\			
 		for(int i=0; i<iterations; i++)
@@ -699,7 +666,7 @@ System.out.println("Computing Boosting Random Forest for:"+ type);
 			    read_file(i+1);
 			   
 				pre_process_data();
-				result = cross_pred_boosting_random_forest();				
+				result = cross_pred_bagging_random_forest();				
 				
 				precision[i]         =   result.precision(1)*100;
 				recall[i]            =   result.recall(1)*100;
@@ -712,7 +679,7 @@ System.out.println("Computing Boosting Random Forest for:"+ type);
 					
 			}
 				  
-		   compute_avg_stdev_and_insert("Random Forest Boosting", precision, recall, accuracy, fmeasure , roc_auc );
+		   compute_avg_stdev_and_insert("Random Forest Bagging", precision, recall, accuracy, fmeasure , roc_auc );
    		   
 }
 
@@ -721,7 +688,7 @@ System.out.println("Computing Boosting Random Forest for:"+ type);
 public static void main(String args[])
 {	  	
 
-	  cross_log_pred_boosting clps =  new cross_log_pred_boosting();
+	  cross_log_pred_bagging clps =  new cross_log_pred_bagging();
 	
 	  double precision[]   = new double[clps.iterations];
 	  double recall[]      = new double[clps.iterations];
@@ -742,29 +709,5 @@ public static void main(String args[])
 }// classs
 
 
-/*
- 
-  //This is the function created to store the files to help in debugging
-public void save_file_temp_location(Instances trains2, Instances tests2)
-	{
-
- try
- {
-      ArffSaver saver = new ArffSaver();
-      saver.setInstances(trains);
-  
-	   saver.setFile(new File("F:\\result\\tom_idf.arff"));
-	
-	   saver.writeBatch();
-
-} catch (IOException e) 
-{
-
-	e.printStackTrace();
-}
-  
-}
-
- */
 
 
