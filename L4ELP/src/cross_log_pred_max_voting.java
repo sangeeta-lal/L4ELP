@@ -326,7 +326,7 @@ private void learn_and_insert_8_max_voting(double[] precision, double[] recall,
 
 
 
-//Insert maximum voting of 8 algorithms
+//Insert maximum voting of 7 algorithms
 private void learn_and_insert_7_max_voting(double[] precision, double[] recall,
 		double[] accuracy, double[] fmeasure, double[] roc_auc)
 {
@@ -355,7 +355,7 @@ private void learn_and_insert_7_max_voting(double[] precision, double[] recall,
 }
 
 
-//Insert maximum voting of 8 algorithms
+//Insert maximum voting of 6 algorithms
 private void learn_and_insert_6_max_voting(double[] precision, double[] recall,
 		double[] accuracy, double[] fmeasure, double[] roc_auc)
 {
@@ -384,7 +384,7 @@ private void learn_and_insert_6_max_voting(double[] precision, double[] recall,
 }
 
 
-//Insert maximum voting of 8 algorithms
+//Insert maximum voting of 5 algorithms
 private void learn_and_insert_5_max_voting(double[] precision, double[] recall,
 		double[] accuracy, double[] fmeasure, double[] roc_auc)
 {
@@ -466,7 +466,7 @@ return evaluation;
 
 
 
-//This program will take vote of 8 algorithms
+//This program will take vote of 5 algorithms
 private Evaluation cross_pred_7_max_voting() 
 {
 	 Classifier[] cfsArray = new Classifier[7]; 
@@ -590,7 +590,8 @@ private Evaluation cross_pred_5_max_voting()
 	  cfsArray[2]=cfs3;
 	  cfsArray[3]=cfs4;
 	  cfsArray[4]=cfs5;
-	  cfsArray[5]=cfs5;
+	  
+	  //cfsArray[5]=cfs5;
 	 // cfsArray[6]=cfs7;
 	  //cfsArray[7]=cfs8;
 
