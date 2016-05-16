@@ -499,6 +499,8 @@ public void compute_avg_stdev_and_insert(String classifier_name, double[] precis
 	{
 		stmt = conn.createStatement();
 		stmt.executeUpdate(insert_str);
+		stmt.close();
+		conn.close();
 	} catch (SQLException e) {
 		
 		e.printStackTrace();

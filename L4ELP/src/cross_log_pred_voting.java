@@ -19,6 +19,7 @@ import weka.classifiers.trees.ADTree;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
+import weka.core.SelectedTag;
 import weka.core.converters.ArffSaver;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
@@ -26,7 +27,12 @@ import weka.filters.supervised.attribute.Discretize;
 import weka.filters.unsupervised.attribute.Standardize;
 import weka.filters.unsupervised.attribute.StringToWordVector;
 
-// This file will be used to ensemble based prediction using stacking of algorithms
+/* This file will be used to ensemble based prediction using voting of algorithms
+ * 1. We are using two types of voting
+ * 2. Majority voting and average voting
+ * 3. I will combination of algorithms for majority and average voting
+ */
+
 public class cross_log_pred_voting
 {
 
@@ -172,7 +178,7 @@ public Evaluation cross_pred_stacking()
 	   
 	 
 	  voter.setClassifiers(cfsArray); 
-	  voter.setCombinationRule(new SelectedTag(AVERAGE_RULE, TAGS_RULES));
+	  voter.setCombinationRule(new SelectedTag(Vote.AVERAGE_RULE, Vote.TAGS_RULES));
 	 
 	
 	

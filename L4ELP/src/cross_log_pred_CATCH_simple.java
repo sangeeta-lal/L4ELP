@@ -60,6 +60,7 @@ public class cross_log_pred_CATCH_simple
 	
 	
 	int iterations=10;
+	int normalized = 1;
 	String source_project="tomcat";
 	String target_project = "cloudstack";
 	//String target_project="hd";
@@ -135,11 +136,14 @@ public void pre_process_data()
 	      
 
  	     //2. Standarize  (not normalize because normalization is affected by outliers very easily)   	  
-     	  Standardize  std_filter =  new Standardize();
-     	  std_filter.setInputFormat(trains);
-     	  trains= Filter.useFilter(trains,std_filter);     	  
+     	  if (normalized ==1)
+     	  {
+     		  Standardize  std_filter =  new Standardize();
+     		  std_filter.setInputFormat(trains);
+     		  trains= Filter.useFilter(trains,std_filter);     	  
      	 
-     	  tests= Filter.useFilter(tests,std_filter);  	  
+     		  tests= Filter.useFilter(tests,std_filter);
+     	  }
 	      
 
  	     //3. Discretizations
@@ -245,7 +249,7 @@ public void compute_avg_stdev_and_insert(String classifier_name, double[] precis
 			
 	   // System.out.println("model ="+classifier_name +"   Acc = "+ avg_accuracy + "  size="+ pred_10_db.size());
 		
-		String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ target_project+"','"+ classifier_name+"',"+ trains.numInstances() + ","+ tests.numInstances()+","
+		String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ target_project+"','"+ classifier_name+"',"+normalized+","+ trains.numInstances() + ","+ tests.numInstances()+","
 		                       + iterations+","+trains.numAttributes() +","+avg_precision+","+ std_precision+","+ avg_recall+","+ std_recall+","+avg_fmeasure+","+std_fmeasure+","+ avg_accuracy 
 		                       +","+std_accuracy+","+ avg_roc_auc+","+ std_roc_auc+" )";
 		System.out.println("Inserting="+ insert_str);
