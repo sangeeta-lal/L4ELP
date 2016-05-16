@@ -36,7 +36,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
  * @Author: Sangeeta
  * 1. This is the simple log prediction code that is used to predict cross project log prediction using simple LogOpt method
  * */
-public class cross_log_pred_CATCH_simple
+public class cross_log_pred_simple
 {
 
 	/*
@@ -55,11 +55,12 @@ public class cross_log_pred_CATCH_simple
 	String url = "jdbc:mysql://localhost:3306/";
 	String driver = "com.mysql.jdbc.Driver";
 	//*/
-	 String db_name ="logging4_elp";
-	 String result_table = "cross_log_pred_catch_simple";
+	 
 	
+	 String type = "catch";
+	// String type = "if";
 	
-	int iterations=10;
+	 int iterations=10;
 	int normalized = 1;
 	String source_project="tomcat";
 	String target_project = "cloudstack";
@@ -73,8 +74,12 @@ public class cross_log_pred_CATCH_simple
 	//String target_project = "tomcat";
 	//String target_project="cloudstack";
 	
-	String source_file_path = path+"L4ELP\\dataset\\"+source_project+"-arff\\catch\\complete\\"+source_project+"_catch_complete.arff";		
-	String target_file_path = path+"L4ELP\\dataset\\"+target_project+"-arff\\catch\\balance\\"+target_project+"_catch_balance";
+	String db_name ="logging4_elp";
+	String result_table = "cross_log_pred_"+type+"_simple";
+	
+	
+	String source_file_path = path+"L4ELP\\dataset\\"+source_project+"-arff\\catch\\complete\\"+source_project+"_"+type+"_complete.arff";		
+	String target_file_path = path+"L4ELP\\dataset\\"+target_project+"-arff\\catch\\balance\\"+target_project+"_"+type+"_balance";
 	
 	DataSource trainsource;
 	DataSource testsource;
@@ -310,7 +315,7 @@ public static void main(String args[])
 			  					new NaiveBayes()};
 			  					//new MultilayerPerceptron()}; //removed because of high computational requirement
 	 
-		cross_log_pred_CATCH_simple clp = new cross_log_pred_CATCH_simple();
+		cross_log_pred_simple clp = new cross_log_pred_simple();
 		
 		
 		// Length of models
