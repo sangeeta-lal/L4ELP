@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
@@ -277,8 +278,12 @@ public void compute_avg_stdev_and_insert(String classifier_name, double[] precis
 	                       +","+std_accuracy+","+ avg_roc_auc+","+ std_roc_auc+" )";
 	System.out.println("Inserting="+ insert_str);
 	
-	conn = initdb(db_name);
-	if(conn==null)
+	Connection conn2 =null;
+	Statement stmt2 = null;
+	
+	conn2= initdb(db_name);
+	
+	if(conn2==null)
 	{
 		System.out.println(" Databasse connection is null");
 		
@@ -286,12 +291,25 @@ public void compute_avg_stdev_and_insert(String classifier_name, double[] precis
 	
 	try 
 	{
-		stmt = conn.createStatement();
-		stmt.executeUpdate(insert_str);
+		stmt2 = conn2.createStatement();
+		stmt2.executeUpdate(insert_str);
+		stmt2.close();
+		conn2.close();
 	} catch (SQLException e) {
 		
 		e.printStackTrace();
+		try {
+				stmt2.close();
+				conn2.close();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 	}
+	
+	
+	
 
 }
 

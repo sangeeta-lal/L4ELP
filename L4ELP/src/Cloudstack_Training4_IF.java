@@ -53,7 +53,7 @@ import java.util.regex.Pattern;
  *  * http://grepcode.com/file/repository.grepcode.com/java/eclipse.org/3.6/org.eclipse.jdt/core/3.6.0/org/eclipse/jdt/core/dom/MethodInvocation.java#MethodInvocation.%3Cinit%3E%28org.eclipse.jdt.core.dom.AST%29
  * */
 
-public class Tomcat_Training4_IF
+public class Cloudstack_Training4_IF
 {
 
 	//@Contextual fLAGS
@@ -114,7 +114,7 @@ public class Tomcat_Training4_IF
 	String db_name ="logging4_elp";
 	String userName = "root"; 
 	String password = "1234";
-	String table ="tomcat_if_training4";	
+	String table ="cloudstack_if_training4";	
     String listing_file_path = "F:\\Research\\L4ELP\\result\\tomcat-8.0.9_java_files.txt";
     
     String non_logged_file_path = "F:\\Research\\L4ELP\\result\\tomcat_non_log_if.txt";
@@ -143,7 +143,7 @@ public class Tomcat_Training4_IF
 		
 	public static void main(String[] args) 
 	{				    
-		Tomcat_Training4_IF demo = new Tomcat_Training4_IF();
+		Cloudstack_Training4_IF demo = new Cloudstack_Training4_IF();
 		demo.conn = demo.initdb(demo.db_name);
 		try {
 			BufferedReader br =  new BufferedReader(new FileReader(demo.listing_file_path));
@@ -177,7 +177,7 @@ public void ast_prser(String file_name)
 		try
 		{
 			
-			rawContent = Tomcat_Training4_IF.readFileToString(file_name);
+			rawContent = Cloudstack_Training4_IF.readFileToString(file_name);
 			
 		}catch(Exception e){
 			System.out.println();
