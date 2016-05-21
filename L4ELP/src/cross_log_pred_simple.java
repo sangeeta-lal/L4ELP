@@ -39,7 +39,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
 public class cross_log_pred_simple
 {
 
-	///*
+	/*
 	 String path = "E:\\Sangeeta\\Research\\";
 	 String user_name =  "sangeetal";
 	 String password = "sangeetal";
@@ -48,7 +48,7 @@ public class cross_log_pred_simple
 	  
 	// */
 	
-	/*
+	///*
 	String path = "F:\\Research\\";
 	String user_name =  "root";
 	String password = "1234";
@@ -58,10 +58,10 @@ public class cross_log_pred_simple
 	 
 	
 	// String type = "catch";
-	 String type = "if";
+	String type = "if";
 	
-	 int iterations=10;
-	int normalized = 0;
+	 int iterations=1;
+	
 	String source_project="tomcat";
 	//String target_project = "cloudstack";
 	String target_project="hd";
@@ -78,8 +78,8 @@ public class cross_log_pred_simple
 	String result_table = "cross_log_pred_"+type+"_simple";
 	
 	
-	String source_file_path = path+"L4ELP\\dataset\\"+source_project+"-arff\\catch\\complete\\"+source_project+"_"+type+"_complete.arff";		
-	String target_file_path = path+"L4ELP\\dataset\\"+target_project+"-arff\\catch\\balance\\"+target_project+"_"+type+"_balance";
+	String source_file_path = path+"L4ELP\\dataset\\"+source_project+"-arff\\"+type+"\\complete\\"+source_project+"_"+type+"_complete.arff";		
+	String target_file_path = path+"L4ELP\\dataset\\"+target_project+"-arff\\"+type+"\\balance\\"+target_project+"_"+type+"_balance";
 	
 	DataSource trainsource;
 	DataSource testsource;
@@ -99,13 +99,16 @@ public void read_file(int i)
 	try 
 		{
 		
+		
+		
 			trainsource = new DataSource(source_file_path);
 			trains = trainsource.getDataSet();
 			trains.setClassIndex(0);
 			
-			testsource = new DataSource(target_file_path+"_"+i+".arff");
-			tests = testsource.getDataSet();
+				
 			
+			testsource = new DataSource(target_file_path+"_"+i+".arff");
+			tests = testsource.getDataSet();			
 			tests.setClassIndex(0);
 			
 			instance_count_source = trains.numInstances();
@@ -142,7 +145,7 @@ public void pre_process_data()
 
  	     //2. Standarize  (not normalize because normalization is affected by outliers very easily)   	  
      	  
-     		  System.out.println("normalize");
+     		  //System.out.println("normalize");
      		  Standardize  std_filter =  new Standardize();
      		  std_filter.setInputFormat(trains);
      		  trains= Filter.useFilter(trains,std_filter);     	  
@@ -342,6 +345,7 @@ public static void main(String args[])
 				   
 					clp.pre_process_data();
 					clp.result = clp.cross_pred(models[j]);				
+					
 					
 					precision[i]         =   clp.result.precision(1)*100;
 					recall[i]            =   clp.result.recall(1)*100;
