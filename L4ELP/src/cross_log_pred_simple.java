@@ -39,7 +39,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
 public class cross_log_pred_simple
 {
 
-	/*
+	///*
 	 String path = "E:\\Sangeeta\\Research\\";
 	 String user_name =  "sangeetal";
 	 String password = "sangeetal";
@@ -48,7 +48,7 @@ public class cross_log_pred_simple
 	  
 	// */
 	
-	///*
+	/*
 	String path = "F:\\Research\\";
 	String user_name =  "root";
 	String password = "1234";
@@ -60,7 +60,7 @@ public class cross_log_pred_simple
 	// String type = "catch";
 	String type = "if";
 	
-	 int iterations=1;
+	 int iterations=10;
 	
 	String source_project="tomcat";
 	//String target_project = "cloudstack";
