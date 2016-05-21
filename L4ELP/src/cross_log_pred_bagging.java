@@ -419,7 +419,41 @@ try
 return evaluation;
 
 }
-			  					
+	
+
+
+
+//This function is used to train and test a using a given classifier
+public Evaluation cross_pred_bagging_rbfnetwork() 
+{
+	
+	
+Bagging m1 =  new Bagging();
+m1.setClassifier(new RBFNetwork());
+m1.setNumIterations(20); 
+
+Evaluation evaluation = null;
+
+try
+{
+
+		
+    m1.buildClassifier(trains);
+	evaluation= new Evaluation(trains);
+	System.out.println("h1");
+	evaluation.evaluateModel(m1, tests);
+
+	System.out.println("h2");
+
+} catch (Exception e) 
+{
+
+	e.printStackTrace();
+}
+
+return evaluation;
+
+}
 
 public Connection initdb(String db_name)
 {
@@ -749,6 +783,38 @@ public void learn_and_insert_adaboost(double[] precision, double[] recall,
 }
 
 
+
+
+public void learn_and_insert_rbfnetwork(double[] precision, double[] recall,
+		double[] accuracy, double[] fmeasure, double[] roc_auc)
+{
+
+	System.out.println("Computing bagging rbf for:"+ type);
+  	//\\=========== bagging ADTree =================================//\\	
+	for(int i=0; i<iterations; i++)
+	 {
+		       System.out.println("Iteration=" + i);
+			    read_file(i+1);
+			   
+				pre_process_data();
+				result = cross_pred_bagging_rbfnetwork();				
+				
+				precision[i]         =   result.precision(1)*100;
+				recall[i]            =   result.recall(1)*100;
+				accuracy[i]          =   result.pctCorrect(); //not required to multiply by 100, it is already in percentage
+				fmeasure[i]          =   result.fMeasure(1)*100;
+				roc_auc[i]           =   result.areaUnderROC(1)*100;		
+			
+				//@ Un comment to see the evalauation results
+				//System.out.println(clp.result.toSummaryString());				
+				
+					
+		}
+				  
+		   compute_avg_stdev_and_insert("Rbfnetwork bagging", precision, recall, accuracy, fmeasure , roc_auc );
+	
+}
+
 //This is the main function
 public static void main(String args[])
 {	  	
@@ -769,6 +835,7 @@ public static void main(String args[])
 	  clps.learn_and_insert_naive_bayes(precision, recall, accuracy,fmeasure,roc_auc);
 	  clps.learn_and_insert_bayes_net(precision, recall, accuracy,fmeasure,roc_auc);
 	  clps.learn_and_insert_adaboost(precision, recall, accuracy,fmeasure,roc_auc);
+	  clps.learn_and_insert_rbfnetwork(precision, recall, accuracy,fmeasure,roc_auc);
     
      }//main	
 	
