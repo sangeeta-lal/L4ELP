@@ -20,4 +20,7 @@ Queries:
 #=========================================================================#
 1. find logged and non-logged if
 >>   select  * from  tomcat_if_training4  where if_expr not like '%isTraceEnabled()'  and     if_expr not like '%isDebugEnabled()'  and if_expr not like '%isInfoEnabled()' and if_expr not like '%isWarnEnabled()'  
-                       and if_expr not like '%isErrorEnabled()'  and if_expr not like '%isFatalEnabled()'  and if_expr!='' and is_if_logged=0
+                       and if_expr not like '%isErrorEnabled()'  and if_expr not like '%isFatalEnabled()'  and if_expr!='' and is_if_logged=1
+                       
+>> select  * from  tomcat_if_training4  where if_expr not like '%isTraceEnabled()'  and     if_expr not like '%isDebugEnabled()'  and if_expr not like '%isInfoEnabled()' and if_expr not like '%isWarnEnabled()'  
+                       and if_expr not like '%isErrorEnabled()'  and if_expr not like '%isFatalEnabled()'  and if_expr!='' and is_if_logged=0                       

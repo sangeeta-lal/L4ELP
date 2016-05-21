@@ -36,7 +36,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
  * @Author: Sangeeta
  * 1. This is the simple log prediction code that is used to predict cross project log prediction using simple LogOpt method
  * */
-public class within_log_pred_CATCH
+public class within_log_pred
 {
 
 	/*
@@ -55,18 +55,23 @@ public class within_log_pred_CATCH
 	String url = "jdbc:mysql://localhost:3306/";
 	String driver = "com.mysql.jdbc.Driver";
 	//*/
-	 String db_name ="logging4_elp";
-	 String result_table = "within_log_pred_catch";
-
+	 
 
 	int iterations=10;	
+	String type = "catch";
+	//String type ="if";
 
-	//String source_project="tomcat";	
-	String source_project="cloudstack";	
+	String source_project="tomcat";	
+	//String source_project="cloudstack";	
 	//String source_project="hd";
-		
+	
+	
+	String db_name ="logging4_elp";
+	String result_table = "within_log_pred_"+type;
+
+	
 	// we are using balanced files for with-in project logging prediction		
-   	String source_file_path = path+"L4ELP\\dataset\\"+source_project+"-arff\\catch\\balance\\"+source_project+"_catch_balance";
+   	String source_file_path = path+"L4ELP\\dataset\\"+source_project+"-arff\\"+type+"\\balance\\"+source_project+"_"+type+"_balance";
 		
 	//DataSource trainsource;
 	DataSource all_data_source;
@@ -79,8 +84,8 @@ public class within_log_pred_CATCH
 	int instance_count_source = 0;
 	 
 
-	Connection conn=null;	
-	java.sql.Statement stmt = null;
+	//Connection conn=null;	
+	//java.sql.Statement stmt = null;
    
 	
 	
@@ -176,9 +181,11 @@ public Evaluation cross_pred(Classifier model)
 
 public Connection initdb(String db_name)
 {
-	 try {
+	Connection conn= null;
+	
+	try {
 		      Class.forName(driver).newInstance();
-		      conn = DriverManager.getConnection(url+db_name,user_name,password);
+		       conn = DriverManager.getConnection(url+db_name,user_name,password);
 		      //System.out.println(" dbname="+ db_name+ "user name"+ userName+ " password="+ password);
 		      if(conn==null)
 		      {
@@ -241,8 +248,8 @@ public void compute_avg_stdev_and_insert(String classifier_name, double[] precis
 		                       +","+std_accuracy+","+ avg_roc_auc+","+ std_roc_auc+" )";
 		System.out.println("Inserting="+ insert_str);
 		
-		conn = initdb(db_name);
-		if(conn==null)
+		Connection conn2 = initdb(db_name);
+		if(conn2==null)
 		{
 			System.out.println(" Databasse connection is null");
 			
@@ -250,8 +257,11 @@ public void compute_avg_stdev_and_insert(String classifier_name, double[] precis
 		
 		try 
 		{
-			stmt = conn.createStatement();
-			stmt.executeUpdate(insert_str);
+			Statement stmt2 = conn2.createStatement();
+			stmt2.executeUpdate(insert_str);
+			stmt2.close();
+			conn2.close();
+			
 		} catch (SQLException e) {
 			
 			e.printStackTrace();
@@ -297,7 +307,7 @@ public static void main(String args[])
 			  					new NaiveBayes()};
 			  					//new MultilayerPerceptron()}; //removed because of high computational requirement
 	 
-		within_log_pred_CATCH clp = new within_log_pred_CATCH();
+		within_log_pred clp = new within_log_pred();
 		
 		
 		// Length of models
