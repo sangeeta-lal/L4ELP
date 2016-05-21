@@ -39,7 +39,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
 public class cross_log_pred_simple
 {
 
-	/*
+	///*
 	 String path = "E:\\Sangeeta\\Research\\";
 	 String user_name =  "sangeetal";
 	 String password = "sangeetal";
@@ -48,7 +48,7 @@ public class cross_log_pred_simple
 	  
 	// */
 	
-	///*
+	/*
 	String path = "F:\\Research\\";
 	String user_name =  "root";
 	String password = "1234";
@@ -57,14 +57,14 @@ public class cross_log_pred_simple
 	//*/
 	 
 	
-	 String type = "catch";
-	// String type = "if";
+	// String type = "catch";
+	 String type = "if";
 	
-	 int iterations=2;
+	 int iterations=10;
 	int normalized = 0;
 	String source_project="tomcat";
-	String target_project = "cloudstack";
-	//String target_project="hd";
+	//String target_project = "cloudstack";
+	String target_project="hd";
 	
 	//String source_project="cloudstack";
 	//String target_project = "tomcat";
@@ -89,8 +89,8 @@ public class cross_log_pred_simple
 	
 	int instance_count_source = 0;
 	int instance_count_target =0;
-	Connection conn=null;	
-    java.sql.Statement stmt = null;
+	//Connection conn=null;	
+   // java.sql.Statement stmt = null;
    
 	
 // This function uses dataset from the ARFF files
@@ -194,7 +194,9 @@ public Evaluation cross_pred(Classifier model)
 
 public Connection initdb(String db_name)
 {
-	 try {
+	Connection conn = null;
+	
+	try {
 		      Class.forName(driver).newInstance();
 		      conn = DriverManager.getConnection(url+db_name,user_name,password);
 		      //System.out.println(" dbname="+ db_name+ "user name"+ userName+ " password="+ password);
@@ -259,8 +261,9 @@ public void compute_avg_stdev_and_insert(String classifier_name, double[] precis
 		                       +","+std_accuracy+","+ avg_roc_auc+","+ std_roc_auc+" )";
 		System.out.println("Inserting="+ insert_str);
 		
-		conn = initdb(db_name);
-		if(conn==null)
+		Connection conn2 = initdb(db_name);
+		Statement stmt2 =null;
+		if(conn2==null)
 		{
 			System.out.println(" Databasse connection is null");
 			
@@ -268,8 +271,10 @@ public void compute_avg_stdev_and_insert(String classifier_name, double[] precis
 		
 		try 
 		{
-			stmt = conn.createStatement();
-			stmt.executeUpdate(insert_str);
+			stmt2 = conn2.createStatement();
+			stmt2.executeUpdate(insert_str);
+			stmt2.close();
+			conn2.close();
 		} catch (SQLException e) {
 			
 			e.printStackTrace();
