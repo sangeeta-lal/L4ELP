@@ -7,8 +7,8 @@ import os
 #"""
 
 #rootdir = "F:\\Research\\L4ELP\\dataset\\tomcat-8.0.9"
-#rootdir = "F:\\Research\\L4ELP\\dataset\\cloudstack-4.3.0"
-rootdir = "F:\\Research\\L4ELP\\dataset\\hd"
+rootdir = "F:\\Research\\L4ELP\\dataset\\cloudstack-4.3.0"
+#rootdir = "F:\\Research\\L4ELP\\dataset\\hd"
 path = "F:\\Research\\L4ELP\\result\\"
 
 """
