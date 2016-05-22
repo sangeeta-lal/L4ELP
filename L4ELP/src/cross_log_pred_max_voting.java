@@ -47,7 +47,7 @@ String password = "sangeetal";
 String url = "jdbc:mysql://localhost:3307/";
 String driver = "com.mysql.jdbc.Driver"; 
 String classifier_name = "";
-String possible_comb_file_path=path +"L4ELP\\results\\comb";
+String possible_comb_file_path=path +"L4ELP\\result\\comb";
  
 // */
 
