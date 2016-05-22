@@ -188,7 +188,7 @@ try {
 
 
 //This method computes the average value  and std. deviation and inserts them in a db
-public void compute_avg_stdev_and_insert(String classifier_name, double[] precision, double[] recall, double[] accuracy, double[] fmeasure, double[] roc_auc) 
+public void compute_avg_stdev_and_insert(String classifier_name, int no_of_classifier, double[] precision, double[] recall, double[] accuracy, double[] fmeasure, double[] roc_auc) 
 {
 
 // computes following metrics:
@@ -230,7 +230,7 @@ public void compute_avg_stdev_and_insert(String classifier_name, double[] precis
 		
   // System.out.println("model ="+classifier_name +"   Acc = "+ avg_accuracy + "  size="+ pred_10_db.size());
 	
-	String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ target_project+"','"+ classifier_name+"',"+ trains.numInstances() + ","+ tests.numInstances()+","
+	String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ target_project+"','"+ classifier_name+"',"+no_of_classifier+","+ trains.numInstances() + ","+ tests.numInstances()+","
 	                       + iterations+","+trains.numAttributes() +","+avg_precision+","+ std_precision+","+ avg_recall+","+ std_recall+","+avg_fmeasure+","+std_fmeasure+","+ avg_accuracy 
 	                       +","+std_accuracy+","+ avg_roc_auc+","+ std_roc_auc+" )";
 	System.out.println("Inserting="+ insert_str);
@@ -284,12 +284,12 @@ private void learn_and_insert_9_max_voting(double[] precision, double[] recall,
 */
 
 
-//Insert maximum voting of 8 algorithms
+//Insert maximum voting of multiple algorithms
 private void learn_and_insert_max_voting(double[] precision, double[] recall,
 		double[] accuracy, double[] fmeasure, double[] roc_auc, int no_of_classifier)
 {
 	System.out.println("Max Voting "+ no_of_classifier +" algorithms:"+ type);
-	//\\=========== voting 8 =================================//\\	
+	//\\=========== voting of many =================================//\\	
 	
 	
 	//Read the file consisting of all the possible combinations
@@ -339,7 +339,7 @@ private void learn_and_insert_max_voting(double[] precision, double[] recall,
 					//System.out.println(clp.result.toSummaryString());							
 				   }
 				  
-		   compute_avg_stdev_and_insert(classifier_name_acronym, precision, recall, accuracy, fmeasure , roc_auc );
+		   compute_avg_stdev_and_insert(classifier_name_acronym, no_of_classifier, precision, recall, accuracy, fmeasure , roc_auc );
 		   
 		   classifier_comb_string =br.readLine();  
 	
@@ -359,11 +359,11 @@ private void learn_and_insert_max_voting(double[] precision, double[] recall,
 private Classifier[] get_classifier_array(int no_of_classifier, String classifier_comb_string) 
 {
 	Classifier[] CfsArray =  new Classifier[no_of_classifier];
+	classifier_name_acronym = "";
 	
 	for(int j=0; j<no_of_classifier; j++)
 	{
-		int classifier_type =  (classifier_comb_string.toCharArray())[j]-'a'-1;
-		classifier_name_acronym = "";
+		int classifier_type =  (classifier_comb_string.toCharArray())[j]-'0'-1;
 		
 		switch(classifier_type){
 			case 0:
