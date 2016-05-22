@@ -1,5 +1,9 @@
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -42,6 +46,8 @@ String user_name =  "sangeetal";
 String password = "sangeetal";
 String url = "jdbc:mysql://localhost:3307/";
 String driver = "com.mysql.jdbc.Driver"; 
+String classifier_name = "";
+String possible_comb_file_path=path +"L4ELP\\results\\comb";
  
 // */
 
@@ -51,6 +57,8 @@ String user_name =  "root";
 String password = "1234";
 String url = "jdbc:mysql://localhost:3306/";
 String driver = "com.mysql.jdbc.Driver";
+String classifier_name="";
+String possible_comb_file_path=path +"L4ELP\\result\\comb";
 //*/
 
 
@@ -77,6 +85,7 @@ String result_table = "cross_log_pred_max_voting_"+type;
 String source_file_path = path+"L4ELP\\dataset\\"+source_project+"-arff\\catch\\complete\\"+source_project+"_catch_complete.arff";		
 String target_file_path = path+"L4ELP\\dataset\\"+target_project+"-arff\\catch\\balance\\"+target_project+"_catch_balance";
 
+String classifier_name_acronym = "";
 DataSource trainsource;
 DataSource testsource;
 Instances trains;
@@ -151,61 +160,10 @@ public void pre_process_data()
      
      tests = Filter.useFilter(tests, dfilter);	      
      
-
-
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-
-}
-
-
-//This function is used to train and test a using a given classifier
-public Evaluation cross_pred_stacking() 
-{
-	
-	  Classifier[] cfsArray = new Classifier[2]; 
-	 // BayesNet cfs1= new BayesNet();
-	  ADTree cfs2= new ADTree();
-	  DecisionTable cfs3= new DecisionTable();
-	 // NaiveBayes cfs4  = new NaiveBayes();
-	  
-	 // cfsArray[0]=cfs1;
-	  cfsArray[0]=cfs2;
-	  cfsArray[1]=cfs3;
-	 // cfsArray[3]=cfs4;
-
-	  
-	  Vote voter =  new Vote();
-	   
-	 
-	  voter.setClassifiers(cfsArray); 
-	  voter.setCombinationRule(new SelectedTag(Vote.AVERAGE_RULE, Vote.TAGS_RULES));
-	 
-	
-	
-     Evaluation evaluation = null;
-
-    try
-    {
-     
-    		
-        voter.buildClassifier(trains);
-    	evaluation= new Evaluation(trains);
-    	System.out.println("h1");
-    	evaluation.evaluateModel(voter, tests);
-       
-    	System.out.println("h2");
-
-    } catch (Exception e) 
-    {
-
-	e.printStackTrace();
-    }
-
-return evaluation;
-
 
 }
 
@@ -295,12 +253,12 @@ public void compute_avg_stdev_and_insert(String classifier_name, double[] precis
 
 }
 
-
-// Insert maximum voting of 8 algorithms
-private void learn_and_insert_8_max_voting(double[] precision, double[] recall,
+/*
+// Insert maximum voting of 9 algorithms
+private void learn_and_insert_9_max_voting(double[] precision, double[] recall,
 		double[] accuracy, double[] fmeasure, double[] roc_auc)
 {
-	System.out.println("Max Voting 8 algorithms:"+ type);
+	System.out.println("Max Voting 9 algorithms:"+ type);
   	//\\=========== bagging ADTree =================================//\\	
 	for(int i=0; i<iterations; i++)
 	 {
@@ -308,7 +266,7 @@ private void learn_and_insert_8_max_voting(double[] precision, double[] recall,
 			    read_file(i+1);
 			   
 				pre_process_data();
-				result = cross_pred_8_max_voting();				
+				result = cross_pred_9_max_voting();				
 				
 				precision[i]         =   result.precision(1)*100;
 				recall[i]            =   result.recall(1)*100;
@@ -320,41 +278,205 @@ private void learn_and_insert_8_max_voting(double[] precision, double[] recall,
 				//System.out.println(clp.result.toSummaryString());							
 		}
 				  
-		   compute_avg_stdev_and_insert("max voting 8", precision, recall, accuracy, fmeasure , roc_auc );
+		   compute_avg_stdev_and_insert("max-voting-all-9", precision, recall, accuracy, fmeasure , roc_auc );
 	
 }
+*/
 
 
-
-//Insert maximum voting of 7 algorithms
-private void learn_and_insert_7_max_voting(double[] precision, double[] recall,
-		double[] accuracy, double[] fmeasure, double[] roc_auc)
+//Insert maximum voting of 8 algorithms
+private void learn_and_insert_max_voting(double[] precision, double[] recall,
+		double[] accuracy, double[] fmeasure, double[] roc_auc, int no_of_classifier)
 {
-	System.out.println("Max Voting 7 algorithms:"+ type);
-	//\\=========== bagging ADTree =================================//\\	
-	for(int i=0; i<iterations; i++)
-	 {
-		       System.out.println("Iteration=" + i);
-			    read_file(i+1);
+	System.out.println("Max Voting "+ no_of_classifier +" algorithms:"+ type);
+	//\\=========== voting 8 =================================//\\	
+	
+	
+	//Read the file consisting of all the possible combinations
+	possible_comb_file_path = possible_comb_file_path+"_"+no_of_classifier+".txt";
+	BufferedReader br= null;
+	
+	try 
+	{
+		br =  new BufferedReader(new FileReader(possible_comb_file_path));
+	
+	
+	} catch (FileNotFoundException e) 
+	{
+		e.printStackTrace();
+	}
+	
+	
+	
+
+	try {
+		
+		String classifier_comb_string =br.readLine();
+	
+		while(br.readLine()!=null)
+		{
+	  
+	             System.out.println("com=" +classifier_comb_string);
+	             
+	             Classifier[] cfsArray = new Classifier[no_of_classifier]; 
+	             cfsArray= get_classifier_array(no_of_classifier, classifier_comb_string);
+				 
+	             for(int i=0; i<iterations; i++)
+					{
+					 System.out.println("Iteration=" + i);
+					 read_file(i+1);
 			   
-				pre_process_data();
-				result = cross_pred_7_max_voting();				
+					 pre_process_data();
+					 result = cross_pred_max_voting(cfsArray);				
 				
-				precision[i]         =   result.precision(1)*100;
-				recall[i]            =   result.recall(1)*100;
-				accuracy[i]          =   result.pctCorrect(); //not required to multiply by 100, it is already in percentage
-				fmeasure[i]          =   result.fMeasure(1)*100;
-				roc_auc[i]           =   result.areaUnderROC(1)*100;		
+					 precision[i]         =   result.precision(1)*100;
+					 recall[i]            =   result.recall(1)*100;
+					 accuracy[i]          =   result.pctCorrect(); //not required to multiply by 100, it is already in percentage
+					 fmeasure[i]          =   result.fMeasure(1)*100;
+					 roc_auc[i]           =   result.areaUnderROC(1)*100;		
 			
-				//@ Un comment to see the evalauation results
-				//System.out.println(clp.result.toSummaryString());							
-		}
+					//@ Un comment to see the evalauation results
+					//System.out.println(clp.result.toSummaryString());							
+				   }
 				  
-		   compute_avg_stdev_and_insert("max voting 7", precision, recall, accuracy, fmeasure , roc_auc );
+		   compute_avg_stdev_and_insert(classifier_name_acronym, precision, recall, accuracy, fmeasure , roc_auc );
+		   
+		   classifier_comb_string =br.readLine();  
+	
+	}//while
+
+	
+	} catch (IOException e) 
+	{
+		
+		e.printStackTrace();
+	}
 	
 }
 
 
+
+private Classifier[] get_classifier_array(int no_of_classifier, String classifier_comb_string) 
+{
+	Classifier[] CfsArray =  new Classifier[no_of_classifier];
+	
+	for(int j=0; j<no_of_classifier; j++)
+	{
+		int classifier_type =  (classifier_comb_string.toCharArray())[j]-'a'-1;
+		classifier_name_acronym = "";
+		
+		switch(classifier_type){
+			case 0:
+				 AdaBoostM1     cfs1   = new AdaBoostM1();
+				 CfsArray[j]         = cfs1;
+				 classifier_name_acronym =  classifier_name_acronym + "ADA-";
+				 break;
+			
+			case 1:	
+				 ADTree         cfs2 = new ADTree();
+				 CfsArray[j]         = cfs2;
+				 classifier_name_acronym =  classifier_name_acronym + "ADT-";
+				break;
+				
+			case 2:
+				 BayesNet       cfs3 = new BayesNet();	
+				 CfsArray[j]         = cfs3;
+				 classifier_name_acronym =  classifier_name_acronym + "BN-";
+				 break;
+				 
+			case 3:
+				 DecisionTable  cfs4 = new DecisionTable();
+				 CfsArray[j]         = cfs4;
+				 classifier_name_acronym =  classifier_name_acronym + "DT-";
+				break;
+			
+			case 4:
+				 J48            cfs5 = new J48();  
+				 CfsArray[j]         = cfs5;
+				 classifier_name_acronym =  classifier_name_acronym + "J48-";
+				 break;
+			
+			case 5:
+				 Logistic       cfs6 = new Logistic();
+				 CfsArray[j]         = cfs6;
+				 classifier_name_acronym =  classifier_name_acronym + "LOG-";
+				break;
+			
+			case 6:
+				 NaiveBayes     cfs7 = new NaiveBayes();
+				 CfsArray[j]         = cfs7;
+				 classifier_name_acronym =  classifier_name_acronym + "NB-";
+				break;
+			
+			case 7:
+				 RandomForest   cfs8 = new RandomForest();
+				 CfsArray[j]         = cfs8;
+				 classifier_name_acronym =  classifier_name_acronym + "RF-";
+				break;
+						
+			case 8:
+				 RBFNetwork     cfs9 = new RBFNetwork();
+				 CfsArray[j]         = cfs9;
+				 classifier_name_acronym =  classifier_name_acronym + "RBF-";
+				break;
+		}//switch
+	}
+	
+	
+	int len =  classifier_name_acronym.length();
+	classifier_name_acronym = classifier_name_acronym.substring(0, len-1);
+	return CfsArray;
+	
+}
+
+
+
+
+//This program will take vote of 8 algorithms
+private Evaluation cross_pred_max_voting(Classifier[] cfsArray) 
+{
+	// Classifier[] cfsArray = new Classifier[8]; 
+	 
+	 
+	/* Logistic       cfs1 = new Logistic();
+	 BayesNet       cfs2 = new BayesNet();	  					
+	 ADTree         cfs3 = new ADTree();
+	 DecisionTable  cfs4 = new DecisionTable();
+	 AdaBoostM1     cfs5 = new AdaBoostM1();
+	 J48            cfs6 = new J48();  
+	 RandomForest   cfs7 = new RandomForest();
+	 NaiveBayes     cfs8 = new NaiveBayes();
+	 RBFNetwork     cfs9 = new RBFNetwork();*/
+	 
+	  
+
+	  Vote voter =  new Vote();  
+	  voter.setClassifiers(cfsArray); 
+	  voter.setCombinationRule(new SelectedTag(Vote.MAJORITY_VOTING_RULE, Vote.TAGS_RULES));
+	
+ Evaluation evaluation = null;
+
+try
+{
+		
+    voter.buildClassifier(trains);
+	evaluation= new Evaluation(trains);
+	System.out.println("h1");
+	evaluation.evaluateModel(voter, tests);
+  
+	System.out.println("h2");
+
+} catch (Exception e) 
+{
+
+	e.printStackTrace();
+}
+
+return evaluation;
+
+}
+
+/*
 //Insert maximum voting of 6 algorithms
 private void learn_and_insert_6_max_voting(double[] precision, double[] recall,
 		double[] accuracy, double[] fmeasure, double[] roc_auc)
@@ -413,7 +535,7 @@ private void learn_and_insert_5_max_voting(double[] precision, double[] recall,
 }
 
 // This program will take vote of 8 algorithms
-private Evaluation cross_pred_8_max_voting() 
+private Evaluation cross_pred_9_max_voting() 
 {
 	 Classifier[] cfsArray = new Classifier[8]; 
 	 
@@ -426,6 +548,7 @@ private Evaluation cross_pred_8_max_voting()
 	 J48            cfs6 = new J48();  
 	 RandomForest   cfs7 = new RandomForest();
 	 NaiveBayes     cfs8 = new NaiveBayes();
+	 RBFNetwork     cfs9 =  new RBFNetwork();
 	 
 	  cfsArray[0]=cfs1;
 	  cfsArray[1]=cfs2;
@@ -435,6 +558,7 @@ private Evaluation cross_pred_8_max_voting()
 	  cfsArray[5]=cfs6;
 	  cfsArray[6]=cfs7;
 	  cfsArray[7]=cfs8;
+	  cfsArray[8]=cfs9;
  
 	  Vote voter =  new Vote();  
 	  voter.setClassifiers(cfsArray); 
@@ -458,60 +582,6 @@ private Evaluation cross_pred_8_max_voting()
 
 	e.printStackTrace();
     }
-
-return evaluation;
-
-}
-
-
-
-
-//This program will take vote of 5 algorithms
-private Evaluation cross_pred_7_max_voting() 
-{
-	 Classifier[] cfsArray = new Classifier[7]; 
-	 
-	 
-	 Logistic       cfs1 = new Logistic();
-	 BayesNet       cfs2 = new BayesNet();	  					
-	 ADTree         cfs3 = new ADTree();
-	 DecisionTable  cfs4 = new DecisionTable();
-	 AdaBoostM1     cfs5 = new AdaBoostM1();
-	 J48            cfs6 = new J48();  
-	// RandomForest   cfs7 = new RandomForest();
-	 NaiveBayes     cfs7 = new NaiveBayes();
-	 
-	  cfsArray[0]=cfs1;
-	  cfsArray[1]=cfs2;
-	  cfsArray[2]=cfs3;
-	  cfsArray[3]=cfs4;
-	  cfsArray[4]=cfs5;
-	  cfsArray[5]=cfs6;
-	  cfsArray[6]=cfs7;
-	  //cfsArray[7]=cfs8;
-
-	  Vote voter =  new Vote();  
-	  voter.setClassifiers(cfsArray); 
-	  voter.setCombinationRule(new SelectedTag(Vote.MAJORITY_VOTING_RULE, Vote.TAGS_RULES));
-	
-   Evaluation evaluation = null;
-
- try
- {
-  
- 		
-     voter.buildClassifier(trains);
- 	evaluation= new Evaluation(trains);
- 	System.out.println("h1");
- 	evaluation.evaluateModel(voter, tests);
-    
- 	System.out.println("h2");
-
- } catch (Exception e) 
- {
-
-	e.printStackTrace();
- }
 
 return evaluation;
 
@@ -620,7 +690,7 @@ try
 
 return evaluation;
 
-}
+}*/
 
 //This is the main function
 public static void main(String args[])
@@ -634,10 +704,16 @@ public static void main(String args[])
 	  double fmeasure[]    = new double[clps.iterations];	
 	  double roc_auc[]     = new double[clps.iterations];
 	  
-	  clps.learn_and_insert_8_max_voting(precision, recall, accuracy,fmeasure,roc_auc);
-	  clps.learn_and_insert_7_max_voting(precision, recall, accuracy,fmeasure,roc_auc);
-	  clps.learn_and_insert_6_max_voting(precision, recall, accuracy,fmeasure,roc_auc);
-	  clps.learn_and_insert_5_max_voting(precision, recall, accuracy,fmeasure,roc_auc);
+	  
+	  //==================Run for number of classifiers===============================//
+	  
+	//  clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc, 9); 
+	  // clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc, 8);
+	//  clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc,7);
+	 // clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc, 6);
+	// clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc, 5);
+	// clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc, 4);
+	 clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc, 3);
 		
  }//main		
 	
