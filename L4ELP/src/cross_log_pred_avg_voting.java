@@ -69,7 +69,7 @@ String result_file =  path+"L4ELP\\result\\avg_vote_result.txt";
 
 String type = "catch";
 //String type = "if";
-int iterations=1;
+int iterations=10;
 String source_project="tomcat";
 String target_project = "cloudstack";
 //String target_project="hd";
@@ -322,7 +322,7 @@ private void learn_and_insert_avg_voting(double[] precision, double[] recall,
 		
 		String classifier_comb_string =br.readLine();
 	    int comb_count =1;
-		while(br.readLine()!=null)
+		while(br!=null)
 		{
 	  
 	             System.out.println("com=" +classifier_comb_string);
@@ -356,6 +356,7 @@ private void learn_and_insert_avg_voting(double[] precision, double[] recall,
 	}//while
 
 	
+	br.close();
 	} catch (IOException e) 
 	{
 		
