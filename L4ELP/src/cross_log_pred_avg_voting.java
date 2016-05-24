@@ -281,7 +281,7 @@ try
 		System.out.println("Result file doesn not exist");
 	}
 	
-	br.write(insert_str);
+	br.write(insert_str+";");
 	br.write("\n");
     br.close();
 
