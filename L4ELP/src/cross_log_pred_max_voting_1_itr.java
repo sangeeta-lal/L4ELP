@@ -40,10 +40,10 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
  * 3. I will combination of algorithms for majority and average voting
  */
 
-public class cross_log_pred_max_voting
+public class cross_log_pred_max_voting_1_itr
 {
 
-/*
+///*
 String path = "E:\\Sangeeta\\Research\\";
 String user_name =  "sangeetal";
 String password = "sangeetal";
@@ -51,11 +51,11 @@ String url = "jdbc:mysql://localhost:3307/";
 String driver = "com.mysql.jdbc.Driver"; 
 String classifier_name = "";
 String possible_comb_file_path=path +"L4ELP\\result\\comb";
-String result_file =  path+"L4ELP\\result\\max_vote_result.txt";
+String result_file =  path+"L4ELP\\result\\max_vote_result_1_itr.txt";
  
 // */
 
-///*
+/*
 String path = "F:\\Research\\";
 String user_name =  "root";
 String password = "1234";
@@ -63,20 +63,20 @@ String url = "jdbc:mysql://localhost:3306/";
 String driver = "com.mysql.jdbc.Driver";
 String classifier_name="";
 String possible_comb_file_path=path +"L4ELP\\result\\comb";
-String result_file =  path+"L4ELP\\result\\max_vote_result.txt";
+String result_file =  path+"L4ELP\\result\\max_vote_result_1_itr.txt";
 //*/
 
 
 String type = "catch";
 //String type = "if";
-int iterations=10;
-String source_project="tomcat";
-String target_project = "cloudstack";
+int iterations=1;
+//String source_project="tomcat";
+//String target_project = "cloudstack";
 //String target_project="hd";
 
-//String source_project="cloudstack";
+String source_project="cloudstack";
 //String target_project = "tomcat";
-//String target_project="hd";
+String target_project="hd";
 
 //String source_project="hd";
 //String target_project = "tomcat";
@@ -84,7 +84,7 @@ String target_project = "cloudstack";
 
 
 String db_name ="logging4_elp";
-String result_table = "cross_log_pred_max_voting_"+type;
+String result_table = "cross_log_pred_max_voting_"+type+"_1_itr";
 
 
 String source_file_path = path+"L4ELP\\dataset\\"+source_project+"-arff\\catch\\complete\\"+source_project+"_catch_complete.arff";		
@@ -297,7 +297,7 @@ try
 private void learn_and_insert_max_voting(double[] precision, double[] recall,
 		double[] accuracy, double[] fmeasure, double[] roc_auc, int no_of_classifier)
 {
-	System.out.println("Max Voting "+ no_of_classifier +" algorithms:"+ type);
+	System.out.println("max Voting "+ no_of_classifier +" algorithms:"+ type);
 	//\\=========== voting of many =================================//\\	
 	
 	
@@ -327,36 +327,39 @@ private void learn_and_insert_max_voting(double[] precision, double[] recall,
 	  
 	             System.out.println("com=" +classifier_comb_string);
 	             
-	             Classifier[] cfsArray = new Classifier[no_of_classifier]; 
-	             cfsArray= get_classifier_array(no_of_classifier, classifier_comb_string);
+	             if(comb_count>95)
+	             {
+	            	 Classifier[] cfsArray = new Classifier[no_of_classifier]; 
+	            	 cfsArray= get_classifier_array(no_of_classifier, classifier_comb_string);
 				 
-	             for(int i=0; i<iterations; i++)
-					{
-					 System.out.println("Iteration=" + i);
-					 read_file(i+1);
+	            	 for(int i=0; i<iterations; i++)
+	            	 {
+	            		 System.out.println("Iteration=" + i);
+	            		 read_file(i+1);
 			   
-					 pre_process_data();
-					 result = cross_pred_max_voting(cfsArray);				
+	            		 pre_process_data();
+	            		 result = cross_pred_max_voting(cfsArray);				
 				
-					 precision[i]         =   result.precision(1)*100;
-					 recall[i]            =   result.recall(1)*100;
-					 accuracy[i]          =   result.pctCorrect(); //not required to multiply by 100, it is already in percentage
-					 fmeasure[i]          =   result.fMeasure(1)*100;
-					 roc_auc[i]           =   result.areaUnderROC(1)*100;		
+	            		 precision[i]         =   result.precision(1)*100;
+	            		 recall[i]            =   result.recall(1)*100;
+	            		 accuracy[i]          =   result.pctCorrect(); //not required to multiply by 100, it is already in percentage
+	            		 fmeasure[i]          =   result.fMeasure(1)*100;
+	            		 roc_auc[i]           =   result.areaUnderROC(1)*100;		
 			
-					//@ Un comment to see the evalauation results
-					//System.out.println(clp.result.toSummaryString());							
-				   }
+	            		 //@ Un comment to see the evalauation results
+	            		 //System.out.println(clp.result.toSummaryString());							
+	            	 }
 				  
 		   compute_avg_stdev_and_insert(classifier_name_acronym, no_of_classifier, comb_count, precision, recall, accuracy, fmeasure , roc_auc );
+	             }
 		   
 		   classifier_comb_string =br.readLine();  
 		   comb_count++;
 	
 	}//while
 
-		br.close();
 	
+	br.close();
 	} catch (IOException e) 
 	{
 		
@@ -450,7 +453,6 @@ private Evaluation cross_pred_max_voting(Classifier[] cfsArray)
 	  Vote voter =  new Vote();  
 	  voter.setClassifiers(cfsArray); 
 	  voter.setCombinationRule(new SelectedTag(Vote.MAJORITY_VOTING_RULE, Vote.TAGS_RULES));
-	  
 	
  Evaluation evaluation = null;
 
@@ -480,7 +482,7 @@ return evaluation;
 public static void main(String args[])
 {	  	
 
-	  cross_log_pred_max_voting clps =  new cross_log_pred_max_voting();
+	  cross_log_pred_max_voting_1_itr clps =  new cross_log_pred_max_voting_1_itr();
 	
 	  double precision[]   = new double[clps.iterations];
 	  double recall[]      = new double[clps.iterations];
@@ -491,13 +493,13 @@ public static void main(String args[])
 	  
 	  //==================Run for number of classifiers===============================//
 	  
-	//  clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc, 9); 
-	  // clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc, 8);
+	 clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc, 9); 
+	 //  clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc, 8);
 	//  clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc,7);
 	 // clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc, 6);
 	// clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc, 5);
 	// clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc, 4);
-//	 clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc, 3);
+	// 	 clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc, 3);
 		
  }//main		
 	
