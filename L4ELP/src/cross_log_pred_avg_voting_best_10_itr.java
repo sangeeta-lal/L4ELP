@@ -40,7 +40,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
  * 3. I will combination of algorithms for majority and average voting
  */
 
-public class cross_log_pred_avg_voting
+public class cross_log_pred_avg_voting_best_10_itr
 {
 
 /*
@@ -62,7 +62,7 @@ String password = "1234";
 String url = "jdbc:mysql://localhost:3306/";
 String driver = "com.mysql.jdbc.Driver";
 String classifier_name="";
-String possible_comb_file_path=path +"L4ELP\\result\\comb";
+String possible_comb_file_path=path +"L4ELP\\result\\best_comb";
 String result_file =  path+"L4ELP\\result\\avg_vote_result.txt";
 //*/
 
@@ -84,7 +84,7 @@ String target_project = "cloudstack";
 
 
 String db_name ="logging4_elp";
-String result_table = "cross_log_pred_avg_voting_"+type;
+String result_table = "cross_log_pred_avg_voting_"+type+"_best_10";
 
 
 String source_file_path = path+"L4ELP\\dataset\\"+source_project+"-arff\\catch\\complete\\"+source_project+"_catch_complete.arff";		
@@ -302,7 +302,7 @@ private void learn_and_insert_avg_voting(double[] precision, double[] recall,
 	
 	
 	//Read the file consisting of all the possible combinations
-	possible_comb_file_path = possible_comb_file_path+"_"+no_of_classifier+".txt";
+	possible_comb_file_path = possible_comb_file_path+"_"+source_project+"_"+target_project+"_"+"avg_"+no_of_classifier+".txt";
 	BufferedReader br= null;
 	
 	try 
@@ -479,7 +479,7 @@ return evaluation;
 public static void main(String args[])
 {	  	
 
-	  cross_log_pred_avg_voting clps =  new cross_log_pred_avg_voting();
+	  cross_log_pred_avg_voting_best_10_itr clps =  new cross_log_pred_avg_voting_best_10_itr();
 	
 	  double precision[]   = new double[clps.iterations];
 	  double recall[]      = new double[clps.iterations];
@@ -496,7 +496,7 @@ public static void main(String args[])
 	 // clps.learn_and_insert_avg_voting(precision, recall, accuracy,fmeasure,roc_auc, 6);
 	// clps.learn_and_insert_avg_voting(precision, recall, accuracy,fmeasure,roc_auc, 5);
 	// clps.learn_and_insert_avg_voting(precision, recall, accuracy,fmeasure,roc_auc, 4);
-	 clps.learn_and_insert_avg_voting(precision, recall, accuracy,fmeasure,roc_auc, 3);
+	 clps.learn_and_insert_avg_voting(precision, recall, accuracy,fmeasure,roc_auc,3);
 		
  }//main		
 	

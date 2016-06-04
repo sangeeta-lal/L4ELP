@@ -37,10 +37,13 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
 /* This file will be used to ensemble based prediction using voting of algorithms
  * 1. We are using two types of voting
  * 2. Majority voting and average voting
- * 3. I will combination of algorithms for majority and average voting
+ * 3. This file will read list of best combinations for each file and will run-them for 10 iterations
+ *  
+ * 
+ * 
  */
 
-public class cross_log_pred_max_voting
+public class cross_log_pred_max_voting_best_10_itr
 {
 
 /*
@@ -62,7 +65,7 @@ String password = "1234";
 String url = "jdbc:mysql://localhost:3306/";
 String driver = "com.mysql.jdbc.Driver";
 String classifier_name="";
-String possible_comb_file_path=path +"L4ELP\\result\\comb";
+String possible_comb_file_path=path +"L4ELP\\result\\best_comb";
 String result_file =  path+"L4ELP\\result\\max_vote_result.txt";
 //*/
 
@@ -84,7 +87,7 @@ String target_project = "cloudstack";
 
 
 String db_name ="logging4_elp";
-String result_table = "cross_log_pred_max_voting_"+type;
+String result_table = "cross_log_pred_max_voting_"+type+"_best_10";
 
 
 String source_file_path = path+"L4ELP\\dataset\\"+source_project+"-arff\\catch\\complete\\"+source_project+"_catch_complete.arff";		
@@ -302,7 +305,7 @@ private void learn_and_insert_max_voting(double[] precision, double[] recall,
 	
 	
 	//Read the file consisting of all the possible combinations
-	possible_comb_file_path = possible_comb_file_path+"_"+no_of_classifier+".txt";
+	possible_comb_file_path = possible_comb_file_path+"_"+source_project+"_"+target_project+"_"+"max_"+no_of_classifier+".txt";
 	BufferedReader br= null;
 	
 	try 
@@ -480,7 +483,7 @@ return evaluation;
 public static void main(String args[])
 {	  	
 
-	  cross_log_pred_max_voting clps =  new cross_log_pred_max_voting();
+	  cross_log_pred_max_voting_best_10_itr clps =  new cross_log_pred_max_voting_best_10_itr();
 	
 	  double precision[]   = new double[clps.iterations];
 	  double recall[]      = new double[clps.iterations];
