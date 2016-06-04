@@ -50,8 +50,8 @@ String password = "sangeetal";
 String url = "jdbc:mysql://localhost:3307/";
 String driver = "com.mysql.jdbc.Driver"; 
 String classifier_name = "";
-String possible_comb_file_path=path +"L4ELP\\result\\comb";
-String result_file =  path+"L4ELP\\result\\avg_vote_result.txt";
+String possible_comb_file_path=path +"L4ELP\\result\\best_comb";
+String result_file =  path+"L4ELP\\result\\avg_vote_result_best_10.txt";
  
 // */
 
@@ -63,7 +63,7 @@ String url = "jdbc:mysql://localhost:3306/";
 String driver = "com.mysql.jdbc.Driver";
 String classifier_name="";
 String possible_comb_file_path=path +"L4ELP\\result\\best_comb";
-String result_file =  path+"L4ELP\\result\\avg_vote_result.txt";
+String result_file =  path+"L4ELP\\result\\avg_vote_result_best_10.txt";
 //*/
 
 
