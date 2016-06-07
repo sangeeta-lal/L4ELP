@@ -23,4 +23,23 @@ Queries:
                        and if_expr not like '%isErrorEnabled()'  and if_expr not like '%isFatalEnabled()'  and if_expr!='' and is_if_logged=1
                        
 >> select  * from  tomcat_if_training4  where if_expr not like '%isTraceEnabled()'  and     if_expr not like '%isDebugEnabled()'  and if_expr not like '%isInfoEnabled()' and if_expr not like '%isWarnEnabled()'  
-                       and if_expr not like '%isErrorEnabled()'  and if_expr not like '%isFatalEnabled()'  and if_expr!='' and is_if_logged=0                       
+                       and if_expr not like '%isErrorEnabled()'  and if_expr not like '%isFatalEnabled()'  and if_expr!='' and is_if_logged=0   
+                       
+                       
+                       
+#=================================================================================#
+Computation of classifier giving best result on avg of 6 pairs of source -> target
+
+RQ 4 : of the paper
+#=================================================================================#    
+1. Find best classifier by running following queries
+
+a. Bases:   select  classifier, AVG(avg_precision), AVG(avg_recall), AVG(avg_fmeasure), AVG(avg_accuracy), AVG(avg_roc_auc) from  cross_log_pred_catch_simple  group by classifier  order by avg( avg_fmeasure) desc
+b. Bagging:  select  classifier, AVG(avg_precision), AVG(avg_recall), AVG(avg_fmeasure), AVG(avg_accuracy), AVG(avg_roc_auc) from   cross_log_pred_bagging_catch  group by classifier  order by avg( avg_fmeasure) desc, avg( avg_accuracy)desc limit 0,1
+c. Average Voting:   select  classifier, AVG(avg_precision), AVG(avg_recall), AVG(avg_fmeasure), AVG(avg_accuracy), AVG(avg_roc_auc) from  cross_log_pred_max_voting_catch_1_itr  group by classifier  order by avg( avg_fmeasure) desc, avg( avg_accuracy)desc limit 0,5
+d. Majority Voting:	 select  classifier, AVG(avg_precision), AVG(avg_recall), AVG(avg_fmeasure), AVG(avg_accuracy), AVG(avg_roc_auc) from  cross_log_pred_avg_voting_catch_1_itr  group by classifier  order by avg( avg_fmeasure) desc, avg( avg_accuracy)desc limit 0,5
+
+e. I have manually identified for each majorityVote algorithm average on all source->target pairs
+f I then identify top-5 of them and run then to 10 iteration using the file " cross_log_pred_max_voting_top5_avg_all_pair_10_itr.java".
+
+ * 	                                       
