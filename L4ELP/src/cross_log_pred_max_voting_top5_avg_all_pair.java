@@ -56,7 +56,7 @@ String password = "sangeetal";
 String url = "jdbc:mysql://localhost:3307/";
 String driver = "com.mysql.jdbc.Driver"; 
 String classifier_name = "";
-String possible_comb_file_path=path +"L4ELP\\result\\best_comb";
+String possible_comb_file_path=path +"L4ELP\\result\\best_comb_on_all_pair";
 //String result_file =  path+"L4ELP\\result\\max_vote_result_best_all_pair_10.txt";  //@Uncomment if you need
  
 // */
@@ -68,7 +68,7 @@ String password = "1234";
 String url = "jdbc:mysql://localhost:3306/";
 String driver = "com.mysql.jdbc.Driver";
 String classifier_name="";
-String possible_comb_file_path=path +"L4ELP\\result\\best_comb";
+String possible_comb_file_path=path +"L4ELP\\result\\best_comb_on_all_pair";
 //String result_file =  path+"L4ELP\\result\\max_vote_result_best_all_pair_10.txt"; //@Uncomment if you need
 //*/
 
@@ -308,7 +308,7 @@ private void learn_and_insert_max_voting(double[] precision, double[] recall,
 	
 	
 	//Read the file consisting of all the possible combinations
-	possible_comb_file_path = possible_comb_file_path+"_"+source_project+"_"+target_project+"_"+"max_"+no_of_classifier+".txt";
+	possible_comb_file_path = possible_comb_file_path+"_"+"max_"+no_of_classifier+".txt";
 	BufferedReader br= null;
 	
 	try 
@@ -499,7 +499,7 @@ public static void main(String args[])
 	  
 	//  clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc, 9); 
 	  // clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc, 8);
-	//  clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc,7);
+	  clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc,7);
 	 // clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc, 6);
 	// clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc, 5);
 	// clps.learn_and_insert_max_voting(precision, recall, accuracy,fmeasure,roc_auc, 4);

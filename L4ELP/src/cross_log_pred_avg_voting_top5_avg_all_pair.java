@@ -50,7 +50,7 @@ String password = "sangeetal";
 String url = "jdbc:mysql://localhost:3307/";
 String driver = "com.mysql.jdbc.Driver"; 
 String classifier_name = "";
-String possible_comb_file_path=path +"L4ELP\\result\\best_comb";
+String possible_comb_file_path=path +"L4ELP\\result\\best_comb_on_all_pair";
 //String result_file =  path+"L4ELP\\result\\avg_vote_result_best_10.txt";
  
 // */
@@ -62,7 +62,7 @@ String password = "1234";
 String url = "jdbc:mysql://localhost:3306/";
 String driver = "com.mysql.jdbc.Driver";
 String classifier_name="";
-String possible_comb_file_path=path +"L4ELP\\result\\best_comb";
+String possible_comb_file_path=path +"L4ELP\\result\\best_comb_on_all_pair";
 //String result_file =  path+"L4ELP\\result\\avg_vote_result_best_10.txt";
 //*/
 
@@ -302,7 +302,7 @@ private void learn_and_insert_avg_voting(double[] precision, double[] recall,
 	
 	
 	//Read the file consisting of all the possible combinations
-	possible_comb_file_path = possible_comb_file_path+"_"+source_project+"_"+target_project+"_"+"avg_"+no_of_classifier+".txt";
+	possible_comb_file_path = possible_comb_file_path+"_"+"avg_"+no_of_classifier+".txt";
 	BufferedReader br= null;
 	
 	try 
