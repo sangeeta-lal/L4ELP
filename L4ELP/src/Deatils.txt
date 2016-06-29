@@ -3,7 +3,7 @@
 #=======================================================================#
 @Sangeeta:
 @Uses: This file is created just to provide information about various tables
-and queries used in this work..@
+and queries used in this work..
 #======================================================================#
 
 1. tomcat_catch_training4 : This is the main dataset created for catch-block extraction
